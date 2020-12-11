@@ -18,9 +18,6 @@ If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - Python 2.7
 - NumPy (Tested on 1.8.2), SciPy (Tested on 0.13.3)
 
-> ### On Triton
->
-> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.68.0-python2`.
 
 The code is the most straightforward to compile with cmake. The cmake script contains  three targets: An executable which is to be used to check is the code running on the used machine and have and example of how the solver can be used from C++ code. Second target is a static library, which encapsulates the functionality. Third target is a dynamic library compiled with boost::python to allow the usage of the solver as a module in python interpreter.
 
@@ -37,6 +34,11 @@ The compilation has been tested on:
 
 ## 1. Download and install the dependencies  
 
+> ### On Triton
+>
+> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.68.0-python2`.
+>
+
 ## 2. Configure the Cmake installation
 
 ### WINDOWS
@@ -50,7 +52,9 @@ set( BOOST_LIBRARYDIR ${BOOST_ROOT}/lib)
 set( Boost_COMPILER "-vc140" )
 set( BOOST_LIBRARYDIR /usr/lib64)
 ```
+
 Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
+
 ```
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
                              -gencode arch=compute_61,code=sm_61 
@@ -75,7 +79,8 @@ Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions
 2.7 make install
 ```
 
-## 4. Build ParallelFDTD with CMAKE  
+## 3. Build ParallelFDTD with CMAKE
+
 > ### Voxelizer
 >
 > If Cmake fails to compile an external dependency called Voxelizer,
@@ -183,6 +188,8 @@ The details of running simulations are reviewed in the scripts matlab/testBench.
 
 ## Installing Voxelizer manually
 
+Clone the Voxelizer library from https://github.com/AaltoRSE/Voxelizer.git. Follow the installation instructions found there. 
+
 Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
 ```
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
@@ -192,11 +199,12 @@ set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
                              -gencode arch=compute_61,code=sm_61 
 ```
 
-
 ```
 2.1 go to the folder of the repository  
-2.2 git checkout next_2
-2.3 mkdir build  
-2.4 cd build  
+2.2 mkdir build 
+2.3 cd build  
+2.4 cmake ..
+2.5 make  
 ```
 
+When compiling ParallelFDTD, add `-DVOXELIZER_ROOT=path_to_voxelizer` to the cmake command.
