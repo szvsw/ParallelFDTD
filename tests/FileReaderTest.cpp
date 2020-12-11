@@ -1,8 +1,4 @@
-#if !defined(WIN32)
-  #define BOOST_TEST_DYN_LINK
-#endif
-
-#define BOOST_TEST_MAIN
+#define BOOST_TEST_MODULE Main
 
 #include <boost/test/unit_test.hpp>
 #include "../src/global_includes.h"
@@ -16,7 +12,7 @@ BOOST_AUTO_TEST_CASE(FileReader_readVTK) {
 	FileReader fr;
 	GeometryHandler gh;
 	std::string geometry_fp = "./Data/ptb_geometry.vtk";
-	std::string invalid_fp = ".s21Da/ptp_geometry.vköööee3222";
+	std::string invalid_fp = ".s21Da/ptp_geometry.vkï¿½ï¿½ï¿½ee3222";
 
 	bool ret = false;
 	ret = fr.readVTK(&gh, geometry_fp);

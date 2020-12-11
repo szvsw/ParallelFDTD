@@ -9,7 +9,11 @@ project(parallelFDTD)
 
 set(CMAKE_CXX_STANDARD 11)
 
+#set(CMAKE_CXX_FLAGS "-O3 -fPIC")
 
+
+# add Voxelizer, either building from github or if VOXELIZER_ROOT
+# is given, use installation in that location
 if(NOT VOXELIZER_ROOT)
 
   include(ExternalProject)
@@ -29,7 +33,7 @@ else()
 
 endif()
 
-
+# Set the library name (cannot use find_package before it's compiled)
 if(WIN32)
   set( VOXELIZER_LIB ${VOXELIZER_LIB_PATH}/Voxelizer.lib )
 elseif(UNIX)
@@ -38,6 +42,7 @@ endif()
 
 
 
+# List C++ source files
 set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
                 ${CMAKE_SOURCE_DIR}/src/base/MaterialHandler.cpp
                 ${CMAKE_SOURCE_DIR}/src/base/SimulationParameters.cpp
@@ -55,64 +60,67 @@ if(BUILD_VISUALIZATION)
                                  ${CMAKE_SOURCE_DIR}/src/base/cameraProto.cpp)
 endif()
 
+# List CUDA source files
 set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/visualizationUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/voxelizationUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
 
-set( GENERATE_DOXYGEN_DOCS OFF )
+# Set default variables
 
-#set( BOOST_ROOT "C:/Users/jks/Documents/boost_1_63_0")
+set( GENERATE_DOXYGEN_DOCS OFF )
+#set( Boost_NO_BOOST_CMAKE ON )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
-#set( Boost_NO_BOOST_CMAKE ON )
+
 
 #If "find package" command gives errors, define the paths manually
-#set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )0
+#set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
 #set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
 #set( BOOST_LIBRARYDIR ${BOOST_ROOT}/stage/lib)
 #set( BOOST_LIBRARYDIR /usr/lib64)
 
+
+# Require boost
 if(WIN32)
   find_package( Boost 1.41 REQUIRED COMPONENTS system thread date_time chrono python unit_test_framework)
 endif()
-
 if(UNIX)
-  find_package( Boost 1.41 REQUIRED COMPONENTS system thread date_time python27 unit_test_framework)
+  find_package( Boost 1.41 COMPONENTS system thread date_time python27 unit_test_framework REQUIRED)
 endif()
 
+# Also find CUDA and Python libraries
+find_package( CUDA REQUIRED )
+find_package( PythonLibs REQUIRED)
+
+
+# These are only needed for visualization
 if(BUILD_VISUALIZATION)
   add_definitions(-DCOMPILE_VISUALIZATION)
   find_package( OpenGL REQUIRED )
   find_package( GLUT REQUIRED )
   find_package( GLEW REQUIRED )
-  if(UNIX)
-    find_library(GLEW_LIBRARIES libGLEW.so /usr/lib/x86_64-linux-gnu/)
-  endif()
 else()
   set(GLUT_LIBRARIES "")
   set(OPENGL_LIBRARIES "")
   set(GLEW_LIBRARIES "")
 endif()
 
-find_package( CUDA REQUIRED )
-find_package( PythonLibs REQUIRED)
 
 # MAC and LINUX: explicitly use x11 GL
-# CHANGE THE PATHS ACCORDINGLY!
-
+# If Cmake fails to find these, uncomment and edit the paths here
+#
 # Example directories for macports installs
-if(APPLE)
-  set(GLUT_INCLUDE_DIR /opt/X11/include/GL)
-  set(GLUT_glut_LIBRARY /opt/X11/lib/libglut.dylib)
-
-  link_directories(/opt/local/lib)
-  link_directories(/opt/x11/lib)
-endif()
-
-
+#if(APPLE)
+#  set(GLUT_INCLUDE_DIR /opt/X11/include/GL)
+#  set(GLUT_glut_LIBRARY /opt/X11/lib/libglut.dylib)
+#
+#  link_directories(/opt/local/lib)
+#  link_directories(/opt/x11/lib)
+#endif()
+#
 # Cmake will find these
 #if(UNIX)
 #  find_library(GLEW_LIBRARIES libGLEW.so /usr/lib/x86_64-linux-gnu/)
@@ -121,8 +129,6 @@ endif()
 #  set(unix_specific_libraries pthread rt)
 #endif()
 
-
-#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W4" )
 
 if(Boost_USE_STATIC_RUNTIME)
   foreach(flag_var
