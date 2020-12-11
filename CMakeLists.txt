@@ -1,13 +1,23 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 #The name of the project
+project(parallelFDTD)
+
 
 # In case one needs to force a compiler, use these ones:
 # set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
 # set(CMAKE_C_COMPILER "/_path_to_bin/...")
 
-project(parallelFDTD)
-
 set(CMAKE_CXX_STANDARD 11)
+
+include(ExternalProject)
+set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+ExternalProject_Add(Voxelizer
+    GIT_REPOSITORY https://github.com/AaltoRSE/Voxelizer.git
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+)
+
+
+set( VOXELIZER_ROOT ${EXTERNAL_INSTALL_LOCATION}/Voxelizer )
 
 
 set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
@@ -91,7 +101,6 @@ if(UNIX)
   #set(unix_specific_libraries pthread rt)
 endif()
 
-set( VOXELIZER_ROOT ${CMAKE_SOURCE_DIR}/src/Voxelizer )
 find_path( VOXELIZER_INCLUDE_DIR voxelizer.h ${VOXELIZER_ROOT}/include )
 
 if(WIN32)
