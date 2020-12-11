@@ -14,10 +14,13 @@ If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - HDF5 libraries (serial libraries: hdf5 & hdf5_hl ; https://support.hdfgroup.org/HDF5/ )
 - HDF5 for python (https://pypi.python.org/pypi/h5py accessed January 11. 2016)
 
-## For the Python interface
+### For the Python interface
 - Python 2.7
 - NumPy (Tested on 1.8.2), SciPy (Tested on 0.13.3)
 
+> ### On Triton
+>
+> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.68.0-python2`.
 
 The code is the most straightforward to compile with cmake. The cmake script contains  three targets: An executable which is to be used to check is the code running on the used machine and have and example of how the solver can be used from C++ code. Second target is a static library, which encapsulates the functionality. Third target is a dynamic library compiled with boost::python to allow the usage of the solver as a module in python interpreter.
 
@@ -30,27 +33,12 @@ To make sure the cmake is able to find the dependencies, it is highly possible t
 The compilation has been tested on:
 - Ubuntu 14.04 LTS with GCC 4.8.4, CentOS 6, CentOS 7 with GCC 4.8.5
 - Windows 7, Windows 10 with vc120, vc140 compilers
+- Triton, the Aalto University cluster
 
-###1. Download and install the dependencies  
+## 1. Download and install the dependencies  
 
-### 2. Clone and build the voxelizer library from https://github.com/hakarlss/Voxelizer  
+## 2. Configure the Cmake installation
 
-Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
-```
-set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61 
-[...]
-set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61 
-```
-
-
-```
-2.1 go to the folder of the repository  
-2.2 git checkout next_2
-2.3 mkdir build  
-2.4 cd build  
-```
 ### WINDOWS
 
 You might have to set the boost variables in cmake:
@@ -87,7 +75,12 @@ Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions
 2.7 make install
 ```
 
-###4. Build ParallelFDTD with CMAKE  
+## 4. Build ParallelFDTD with CMAKE  
+> ### Voxelizer
+>
+> If Cmake fails to compile an external dependency called Voxelizer,
+> see the end of this document for details.
+
 To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
 ```
 -DBUILD_TESTS=on
@@ -182,3 +175,28 @@ The simulation tool does not rely on any specific CAD format. Any format which y
 
 ### Run the simulation
 The details of running simulations are reviewed in the scripts matlab/testBench.m for matlab, and python/testBench.py for Python.
+
+
+
+
+
+
+## Installing Voxelizer manually
+
+Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
+```
+set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
+                             -gencode arch=compute_61,code=sm_61 
+[...]
+set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
+                             -gencode arch=compute_61,code=sm_61 
+```
+
+
+```
+2.1 go to the folder of the repository  
+2.2 git checkout next_2
+2.3 mkdir build  
+2.4 cd build  
+```
+
