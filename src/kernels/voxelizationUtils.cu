@@ -25,8 +25,8 @@
 #include "voxelizationUtils.h"
 
 #include <algorithm>
-#include "../Voxelizer/include/helper_math.h"
-#include "../Voxelizer/include/voxelizer.h"
+#include "Voxelizer/include/helper_math.h"
+#include "Voxelizer/include/voxelizer.h"
 
 #ifndef FLT_EPSILON
     #define FLT_EPSILON __FLT_EPSILON__

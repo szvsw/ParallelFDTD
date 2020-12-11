@@ -47,8 +47,8 @@
 #include <vector>
 
 #include "cudaUtils.h"
-#include "../Voxelizer/include/common.h"
-#include "../Voxelizer/include/voxelizer.h"
+#include "Voxelizer/include/common.h"
+#include "Voxelizer/include/voxelizer.h"
 #include "cudaMesh.h"
 
 class Node;

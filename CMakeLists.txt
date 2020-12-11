@@ -9,15 +9,33 @@ project(parallelFDTD)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include(ExternalProject)
-set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
-ExternalProject_Add(Voxelizer
+
+if(NOT VOXELIZER_ROOT)
+
+  include(ExternalProject)
+  ExternalProject_Add(Voxelizer
     GIT_REPOSITORY https://github.com/AaltoRSE/Voxelizer.git
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-)
+  )
+  set( VOXELIZER_ROOT ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/Voxelizer )
+  set( VOXELIZER_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/ )
+  set( VOXELIZER_LIB_PATH ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/Voxelizer-build/lib/ )
+
+else()
+
+  # The sources refer to Voxelizer includes as Voxelizer/include/...
+  # Since one of the headers is common.h, maybe it's best to disambiguate.
+  set( VOXELIZER_INCLUDE_DIR ${VOXELIZER_ROOT}/../ )
+  set( VOXELIZER_LIB_PATH ${VOXELIZER_ROOT}/lib )
+
+endif()
 
 
-set( VOXELIZER_ROOT ${EXTERNAL_INSTALL_LOCATION}/Voxelizer )
+if(WIN32)
+  set( VOXELIZER_LIB ${VOXELIZER_LIB_PATH}/Voxelizer.lib )
+elseif(UNIX)
+  set( VOXELIZER_LIB ${VOXELIZER_LIB_PATH}/libVoxelizer.a )
+endif()
+
 
 
 set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
@@ -94,20 +112,15 @@ if(APPLE)
   link_directories(/opt/x11/lib)
 endif()
 
-if(UNIX)
-  #find_library(GLEW_LIBRARIES libGLEW.so /usr/lib/x86_64-linux-gnu/)
-  #link_directories(/usr/local/lib)
-  #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w -m64 -fPIC -O3 -DBOOST_PYTHON_DYNAMIC_MODULE")
-  #set(unix_specific_libraries pthread rt)
-endif()
 
-find_path( VOXELIZER_INCLUDE_DIR voxelizer.h ${VOXELIZER_ROOT}/include )
+# Cmake will find these
+#if(UNIX)
+#  find_library(GLEW_LIBRARIES libGLEW.so /usr/lib/x86_64-linux-gnu/)
+#  link_directories(/usr/local/lib)
+#  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w -m64 -fPIC -O3 -DBOOST_PYTHON_DYNAMIC_MODULE")
+#  set(unix_specific_libraries pthread rt)
+#endif()
 
-if(WIN32)
-  find_library( VOXELIZER_LIB Voxelizer.lib ${CMAKE_SOURCE_DIR}/lib)
-elseif(UNIX)
-  find_library( VOXELIZER_LIB libVoxelizer.a ${CMAKE_SOURCE_DIR}/lib)
-endif()
 
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W4" )
 
