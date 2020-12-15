@@ -36,7 +36,7 @@ The compilation has been tested on:
 
 > ### On Triton
 >
-> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.68.0-python2`.
+> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.66.0-openmpi-python2`.
 >
 
 ## 2. Configure the Cmake installation

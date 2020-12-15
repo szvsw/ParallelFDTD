@@ -7,10 +7,6 @@ project(parallelFDTD)
 # set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
 # set(CMAKE_C_COMPILER "/_path_to_bin/...")
 
-set(CMAKE_CXX_STANDARD 11)
-
-#set(CMAKE_CXX_FLAGS "-O3 -fPIC")
-
 
 # add Voxelizer, either building from github or if VOXELIZER_ROOT
 # is given, use installation in that location
@@ -67,8 +63,8 @@ set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
 
-# Set default variables
 
+# Set default variables
 set( GENERATE_DOXYGEN_DOCS OFF )
 #set( Boost_NO_BOOST_CMAKE ON )
 set( Boost_USE_STATIC_LIBS ON )
@@ -88,7 +84,7 @@ if(WIN32)
   find_package( Boost 1.41 REQUIRED COMPONENTS system thread date_time chrono python unit_test_framework)
 endif()
 if(UNIX)
-  find_package( Boost 1.41 COMPONENTS system thread date_time python27 unit_test_framework REQUIRED)
+  find_package( Boost 1.41 COMPONENTS system thread date_time python unit_test_framework REQUIRED)
 endif()
 
 # Also find CUDA and Python libraries
