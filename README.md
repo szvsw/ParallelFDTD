@@ -74,7 +74,7 @@ Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions
 ### Ubuntu / CentOS
 
 ```
-2.5 cmake ../
+2.5 cmake ../ -DCMAKE_BUILD_TYPE=release
 2.6 make
 2.7 make install
 ```
