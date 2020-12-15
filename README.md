@@ -41,10 +41,8 @@ The compilation has been tested on:
 
 ## 2. Configure the Cmake installation
 
-### WINDOWS
-
-You might have to set the boost variables in cmake:
-
+Cmake should automatically find all required libraries. If not, check the CMakeLists.txt file for
+lines like
 ```
 set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
 set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
@@ -52,6 +50,8 @@ set( BOOST_LIBRARYDIR ${BOOST_ROOT}/lib)
 set( Boost_COMPILER "-vc140" )
 set( BOOST_LIBRARYDIR /usr/lib64)
 ```
+
+Uncomment these and edit the values.
 
 Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
 
@@ -61,22 +61,6 @@ set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
 [...]
 set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
                              -gencode arch=compute_61,code=sm_61 
-```
-
-Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
-
-```
-2.5 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
-2.6 nmake  
-2.7 nmake install  
-```
-
-### Ubuntu / CentOS
-
-```
-2.5 cmake ../ -DCMAKE_BUILD_TYPE=release
-2.6 make
-2.7 make install
 ```
 
 ## 3. Build ParallelFDTD with CMAKE
@@ -89,41 +73,19 @@ Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions
 To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
 ```
 -DBUILD_TESTS=on
--DBUILD_PYTHON=on
 -DBUILD_VISUALIZATION=on
 ```
 with the cmake command.
 
 ```
 4.1 go to the folder of the repository  
-4.2 Copy the Voxelizer.lib / Voxelizer.a to folder /ParallelFDTD/lib/  
-4.3 mkdir build  
-4.4 cd build  
+4.2 mkdir build  
+4.3 cd build  
 ```
 
 ### WINDOWS
 
-First copy the "Voxelizer.lib" library to the the ParallelFDTD folder\lib. 
-
-You might have to set the boost variables in cmake:
-
-```
-set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
-set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
-set( BOOST_LIBRARYDIR ${BOOST_ROOT}/lib)
-set( Boost_COMPILER "-vc140" )
-set( BOOST_LIBRARYDIR /usr/lib64)
-```
-Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
-```
-set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61 
-[...]
-set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61 
-```
-
-Then open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
+Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 
 ```
 4.5 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
