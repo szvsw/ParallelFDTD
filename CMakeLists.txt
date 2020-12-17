@@ -7,6 +7,8 @@ project(parallelFDTD)
 # set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
 # set(CMAKE_C_COMPILER "/_path_to_bin/...")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 
 # add Voxelizer, either building from github or if VOXELIZER_ROOT
 # is given, use installation in that location
@@ -86,6 +88,7 @@ endif()
 if(UNIX)
   find_package( Boost 1.41 COMPONENTS system thread date_time python unit_test_framework REQUIRED)
 endif()
+#Boost/1.*-foss-2016a-Python-2.7.11 works
 
 # Also find CUDA and Python libraries
 find_package( CUDA REQUIRED )
