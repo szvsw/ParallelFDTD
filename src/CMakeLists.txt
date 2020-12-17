@@ -29,11 +29,11 @@ set_target_properties( testExec PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOUR
 set_target_properties( libParallelFDTD PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/ )
 
 if(WIN32)
-install(FILES ${CMAKE_BINARY_DIR}/lib/libParallelFDTD.lib ${CMAKE_SOURCE_DIR}/lib/Voxelizer.lib
+install(FILES ${CMAKE_BINARY_DIR}/lib/libParallelFDTD.lib ${VOXELIZER_LIB_PATH}/Voxelizer.lib
         DESTINATION ${CMAKE_SOURCE_DIR}/matlab/lib/)
 endif()
 if(UNIX)
-install(FILES ${CMAKE_BINARY_DIR}/lib/liblibParallelFDTD.a ${CMAKE_SOURCE_DIR}/lib/libVoxelizer.a
+install(FILES ${CMAKE_BINARY_DIR}/lib/liblibParallelFDTD.a ${VOXELIZER_LIB_PATH}/libVoxelizer.a
         DESTINATION ${CMAKE_SOURCE_DIR}/matlab/lib/)
 endif()
 
