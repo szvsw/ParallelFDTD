@@ -36,7 +36,8 @@ The compilation has been tested on:
 
 > ### On Triton
 >
-> These dependencies can be loaded with `module load gcc/6.5.0 cuda cmake boost/1.66.0-openmpi-python2`.
+> First start an interactive session on a GPU node using `sinteractive -t 1:00:00 --gres=gpu:1`.
+> Load the dependencies with `module load gcc/6.5.0 cuda cmake boost/1.66.0-openmpi-python2`.
 >
 
 ## 2. Configure the Cmake installation
@@ -96,7 +97,7 @@ Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 ### Ubuntu / CentOS
 
 ```
-4.5 cmake -DBUILD_PYTHON=on ../
+4.5 cmake -DCMAKE_BUILD_TYPE=release ../
 4.6 make  
 4.7 make install  
 ```
