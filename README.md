@@ -58,10 +58,10 @@ Depending on the GPU card you have, add the CUDA compute capabilities to the com
 
 ```
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61 
+                             -gencode arch=compute_61,code=sm_61
 [...]
 set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61 
+                             -gencode arch=compute_61,code=sm_61
 ```
 
 ## 3. Build ParallelFDTD with CMAKE
@@ -151,20 +151,20 @@ The details of running simulations are reviewed in the scripts matlab/testBench.
 
 ## Installing Voxelizer manually
 
-Clone the Voxelizer library from https://github.com/AaltoRSE/Voxelizer.git. Follow the installation instructions found there. 
+Clone the Voxelizer library from https://github.com/AaltoRSE/Voxelizer.git. Follow the installation instructions found there.
 
 Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
 ```
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61 
+                             -gencode arch=compute_61,code=sm_61
 [...]
 set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61 
+                             -gencode arch=compute_61,code=sm_61
 ```
 
 ```
 2.1 go to the folder of the repository  
-2.2 mkdir build 
+2.2 mkdir build
 2.3 cd build  
 2.4 cmake ..
 2.5 make  
