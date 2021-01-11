@@ -25,7 +25,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/python.hpp>
 #include <boost/python/extract.hpp>
-#include <boost/python/numeric.hpp>
+#include <boost/python/numpy.hpp>
 #include <boost/python/stl_iterator.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
@@ -43,11 +43,12 @@ namespace GLOBAL {
 using namespace boost::python;
 
 boost::python::object toNumpyArray(unsigned int* data, long int size) {
-
-    // create a PyObject * from pointer and data
-      PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_UINT32, data );
-      boost::python::handle<> handle( pyObj );
-      boost::python::numeric::array arr( handle );
+      boost::python::numpy::dtype dt = boost::python::numpy::dtype::get_builtin<unsigned int>();
+      boost::python::tuple shape = boost::python::make_tuple(size);
+      boost::python::tuple stride = boost::python::make_tuple(size);
+      boost::python::object owner;
+      boost::python::numpy::ndarray array =
+      boost::python::numpy::from_data(data, dt, shape, stride, owner);
 
     /* The problem of returning arr is twofold: firstly the user can modify
       the data which will betray the const-correctness
@@ -55,33 +56,41 @@ boost::python::object toNumpyArray(unsigned int* data, long int size) {
       lifetime of the numpy array whatsoever. But we have a simple solution..
      */
 
-       return arr.copy(); // copy the object. numpy owns the copy now.
+       return array.copy(); // copy the object. numpy owns the copy now.
 }
 
 boost::python::object toNumpyArray(float* data, long int size) {
+      boost::python::numpy::dtype dt = boost::python::numpy::dtype::get_builtin<float>();
+      boost::python::tuple shape = boost::python::make_tuple(size);
+      boost::python::tuple stride = boost::python::make_tuple(size);
+      boost::python::object owner;
+      boost::python::numpy::ndarray array =
+      boost::python::numpy::from_data(data, dt, shape, stride, owner);
 
-    // create a PyObject * from pointer and data
-      PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_FLOAT, data );
-      boost::python::handle<> handle( pyObj );
-      boost::python::numeric::array arr( handle );
-      return arr.copy(); // copy the object. numpy owns the copy now.
+      return array.copy(); // copy the object. numpy owns the copy now.
 }
 
 boost::python::object toNumpyArray(double* data, long int size) {
+      boost::python::numpy::dtype dt = boost::python::numpy::dtype::get_builtin<double>();
+      boost::python::tuple shape = boost::python::make_tuple(size);
+      boost::python::tuple stride = boost::python::make_tuple(size);
+      boost::python::object owner;
+      boost::python::numpy::ndarray array =
+      boost::python::numpy::from_data(data, dt, shape, stride, owner);
+
     // create a PyObject * from pointer and data
-      PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_DOUBLE, data );
-      boost::python::handle<> handle( pyObj );
-      boost::python::numeric::array arr( handle );
-      return arr.copy(); // copy the object. numpy owns the copy now.
+      return array.copy(); // copy the object. numpy owns the copy now.
 }
 
 boost::python::object toNumpyArray(unsigned char* data, long int size) {
+    boost::python::numpy::dtype dt = boost::python::numpy::dtype::get_builtin<char>();
+    boost::python::tuple shape = boost::python::make_tuple(size);
+    boost::python::tuple stride = boost::python::make_tuple(size);
+    boost::python::object owner;
+    boost::python::numpy::ndarray array =
+    boost::python::numpy::from_data(data, dt, shape, stride, owner);
 
-    // create a PyObject * from pointer and data
-      PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_UINT8, data );
-      boost::python::handle<> handle( pyObj );
-      boost::python::numeric::array arr( handle );
-      return arr.copy(); // copy the object. numpy owns the copy now.
+      return array.copy(); // copy the object. numpy owns the copy now.
 }
 
 void FDTD::App::initializeGeometryPy(boost::python::list indices,
@@ -161,8 +170,8 @@ boost::python::object FDTD::App::getVoxelization(boost::python::list indices,
   return result;
 }
 
-void FDTD::App::initializeDomainPy(boost::python::numeric::array position_idx,
-                                   boost::python::numeric::array material_idx,
+void FDTD::App::initializeDomainPy(boost::python::numpy::ndarray position_idx,
+                                   boost::python::numpy::ndarray material_idx,
                                    unsigned int dim_x,
                                    unsigned int dim_y,
                                    unsigned int dim_z) {
@@ -204,7 +213,7 @@ void FDTD::App::initializeDomainPy(boost::python::numeric::array position_idx,
   this->initializeDomain(&std_pos[0], &std_mat[0], dim_x, dim_y, dim_z);
 }
 
-void FDTD::App::setSliceXY(boost::python::numeric::array slice,
+void FDTD::App::setSliceXY(boost::python::numpy::ndarray slice,
                            unsigned int dim_x, unsigned int dim_y,
                            int slice_idx) {
   int s_len = (int)boost::python::len(slice);
@@ -373,7 +382,7 @@ struct enable_numpy_scalar_converter
 };
 
 BOOST_PYTHON_MODULE(libPyFDTD) {
-  boost::python::numeric::array::set_module_and_type("numpy", "ndarray");
+  //boost::python::numpy::set_module_and_type("numpy", "ndarray");
 
   enable_numpy_scalar_converter<boost::uint8_t, NPY_UBYTE>();
 

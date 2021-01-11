@@ -53,8 +53,8 @@ namespace boost {
   namespace python {
     class list;
     class object;
-    namespace numeric {
-      class array;
+    namespace numpy {
+      class ndarray;
     }
   }
 }
@@ -396,8 +396,8 @@ public:
   void initializeGeometryPy(boost::python::list indices,
                             boost::python::list vertices);
 
-  void initializeDomainPy(boost::python::numeric::array position_idx,
-                          boost::python::numeric::array material_idx,
+  void initializeDomainPy(boost::python::numpy::ndarray position_idx,
+                          boost::python::numpy::ndarray material_idx,
                           unsigned int dim_x,
                           unsigned int dim_y,
                           unsigned int dim_z);
@@ -405,7 +405,7 @@ public:
   void setLayerIndicesPy(boost::python::list indices,
                          std::string name);
 
-  void setSliceXY(boost::python::numeric::array slice,
+  void setSliceXY(boost::python::numpy::ndarray slice,
                   unsigned int dim_x, unsigned int dim_y,
                   int slice_idx);
 
