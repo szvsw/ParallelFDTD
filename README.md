@@ -78,6 +78,10 @@ To build the tests, python module (for linux only) and visualization, use the fo
 ```
 with the cmake command.
 
+The python bindings in Boost have changed since the library was written and
+using them will take a bit more work. They would be compiled with
+```-DBUILD_PYTHON=on``` or ```-DBUILD_PYTHON2=on``` for python2.7.
+
 ```
 4.1 go to the folder of the repository  
 4.2 mkdir build  

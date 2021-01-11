@@ -7,7 +7,7 @@ project(parallelFDTD)
 # set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
 # set(CMAKE_C_COMPILER "/_path_to_bin/...")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -fPIC")
 
 
 # add Voxelizer, either building from github or if VOXELIZER_ROOT
@@ -73,6 +73,10 @@ set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
 
+# if building for python2, enable python bindings
+if(BUILD_PYTHON2)
+  set( BUILD_PYTHON on)
+endif()
 
 #If "find package" command gives errors, define the paths manually
 #set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
@@ -82,13 +86,33 @@ set( Boost_USE_STATIC_RUNTIME OFF )
 
 
 # Require boost
+# List necessary boost libraries
+set(Boost_list "system thread date_time unit_test_framework")
+
+# On windows include the chrono library
 if(WIN32)
-  find_package( Boost 1.41 REQUIRED COMPONENTS system thread date_time chrono python unit_test_framework)
+  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono REQUIRED)
 endif()
+
+# Check the boost version to figure out the format of the python library
 if(UNIX)
-  find_package( Boost 1.41 COMPONENTS system thread date_time python unit_test_framework REQUIRED)
+  FIND_PACKAGE(Boost)
+  if(Boost_VERSION_MINOR LESS 67 )
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python REQUIRED)
+  else()
+    # with boost > 1.66, we need to specify the python version.
+    if(BUILD_PYTHON2)
+      # If building for python 2, just use 2.7. This is the last version that will exist.
+      set(Boost_list "${Boost_list} python2.7")
+      find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python2.7 REQUIRED)
+    else()
+      # Find python to set the version. This will find python 3
+      FIND_PACKAGE(Python)
+      find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
+    endif()
+  endif()
 endif()
-#Boost/1.*-foss-2016a-Python-2.7.11 works
+
 
 # Also find CUDA and Python libraries
 find_package( CUDA REQUIRED )
