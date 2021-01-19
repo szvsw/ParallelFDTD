@@ -342,7 +342,7 @@ struct enable_numpy_scalar_converter
   enable_numpy_scalar_converter() {
     // Required NumPy call in order to use the NumPy C API within another
     // extension module.
-    import_array();
+    _import_array();
 
     boost::python::converter::registry::push_back(
       &convertible,
