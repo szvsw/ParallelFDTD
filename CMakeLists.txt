@@ -7,6 +7,9 @@ project(parallelFDTD)
 # set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
 # set(CMAKE_C_COMPILER "/_path_to_bin/...")
 
+SET(CMAKE_CXX_FLAGS_RELEASE "")
+SET(CMAKE_CXX_FLAGS_DEBUG "")
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fPIC")
 
 
@@ -78,6 +81,12 @@ if(BUILD_PYTHON2)
   set( BUILD_PYTHON on)
 endif()
 
+
+# Find CUDA and Python libraries
+find_package( CUDA REQUIRED )
+find_package( PythonLibs REQUIRED)
+
+
 #If "find package" command gives errors, define the paths manually
 #set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
 #set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
@@ -112,11 +121,6 @@ if(UNIX)
     endif()
   endif()
 endif()
-
-
-# Also find CUDA and Python libraries
-find_package( CUDA REQUIRED )
-find_package( PythonLibs REQUIRED)
 
 
 # These are only needed for visualization
