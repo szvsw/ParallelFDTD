@@ -15,7 +15,7 @@ If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - HDF5 for python (https://pypi.python.org/pypi/h5py accessed January 11. 2016)
 
 ### For the Python interface
-- Python 2.7
+- Python 2.7 or 3.7
 - NumPy (Tested on 1.8.2), SciPy (Tested on 0.13.3)
 
 
@@ -25,7 +25,6 @@ The Matlab interface is not updated and is not guaranteed to work with the updat
 
 Compiling
 =========
-To make sure the cmake is able to find the dependencies, it is highly possible that the cmake file at /ParallelFDTD/CMakeLists.txt has to edited to make the library and include directories match the system in use.
 
 The compilation has been tested on:
 - Ubuntu 14.04 LTS with GCC 4.8.4, CentOS 6, CentOS 7 with GCC 4.8.5
@@ -36,12 +35,45 @@ The compilation has been tested on:
 
 > ### On Triton
 >
-> First start an interactive session on a GPU node using `sinteractive -t 1:00:00 --gres=gpu:1`.
-> Load the dependencies with `module load gcc/6.5.0 cuda cmake boost/1.66.0-openmpi-python2`.
+> Load the dependencies with `module load anaconda gcc/6.5.0 cuda`.
+> You also need to create the anaconda environment, see below.
 >
+> It is possible to compile on the login nodes, but the libraries might be different on the
+> compute nodes.
+>
+> To compile on a gpu node, start an interactive session using
+> `sinteractive -t 1:00:00 --gres=gpu:1`.
+>
+
+The dependencies are handled most easily using Anaconda. Install it first following
+the instructions at https://docs.anaconda.com/anaconda/install/ (or install
+miniconda, https://docs.conda.io/en/latest/miniconda.html)
+
+Clone this repository. In the cloned folder create the Conda environment using
+(you can replace the environment name `PFDTD` with your own preference)
+```
+1.1 cd ParallelFDTD
+1.2 conda env create -n PFDTD -f conda_environment.yml
+```
+
+This will install compatible versions Boost and cmake into a new conda evironment.
+
+> ### Python 2
+>
+> To build for Python 2.7, create an environment use `conda_environment-py2.yml`
+> instead of `conda_environment.yml`
+>
+> Python 2 is no longer developed and supporting it will not be possible
+> for long.
+
+Activate the new environment
+```
+1.3 conda activate PFDTD
+```
 
 ## 2. Configure the Cmake installation
 
+<!--
 Cmake should automatically find all required libraries. If not, check the CMakeLists.txt file for
 lines like
 ```
@@ -53,6 +85,7 @@ set( BOOST_LIBRARYDIR /usr/lib64)
 ```
 
 Uncomment these and edit the values.
+-->
 
 Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
 
@@ -80,12 +113,12 @@ with the cmake command.
 
 The python bindings in Boost have changed since the library was written and
 using them will take a bit more work. They would be compiled with
-```-DBUILD_PYTHON=on``` or ```-DBUILD_PYTHON2=on``` for python2.7.
+`DBUILD_PYTHON=on`.
 
 ```
 4.1 go to the folder of the repository  
 4.2 mkdir build  
-4.3 cd build  
+4.3 cd build
 ```
 
 ### WINDOWS
@@ -125,6 +158,7 @@ Practicalities
 In order to run a simulation, some practical things have to be done:
 
 ### Make a model of the space
+
 One convenient software choice for building models for simulation is SketchUp Make: http://www.sketchup.com/. The software is free for non-commercial use, and has a handy plugin interface that allows the user to write ruby scripts for geometry modifications and file IO.
 
 A specific requirement for the geometry is that it should be solid/watertight. In practice this means that the geometry can not contain single planes or holes. The geometry has to have a volume. For example, a balcony rail can not be represented with a single rectangle, the rail has to be drawn as a box, or as a volume that is part of the balcony itself. The reason for this is that the voxelizer makes intersection tests in order to figure out whether a node it is processing is inside or outside of the geometry. Therefore, a plane floating inside a solid box will skrew this calculation up hence after intersecting this floating plane, the voxelizer thinks it has jumped out of the geometry, when actually it is inside. A hole in the geometry will do the opposite; if the voxelizer hits a hole in the boundary of the model, it does not know it is outside regardless  of the intentions of the creator of the model. A volume inside a volume is fine.
