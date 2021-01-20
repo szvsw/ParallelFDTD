@@ -4,8 +4,8 @@
 #include <boost/test/unit_test.hpp>
 
 
-#include "../src/Voxelizer/include/helper_math.h"
-#include "../src/Voxelizer/include/voxelizer.h"
+#include "Voxelizer/include/helper_math.h"
+#include "Voxelizer/include/voxelizer.h"
 
 
 #include "../src/kernels/voxelizationUtils.h"

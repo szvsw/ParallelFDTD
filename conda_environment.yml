@@ -2,7 +2,6 @@ channels:
   - conda-forge
 
 dependencies:
-  # For preprocessing pipeline
   - boost
   - py-boost
   - cmake
