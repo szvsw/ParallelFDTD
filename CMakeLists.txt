@@ -3,14 +3,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 project(parallelFDTD)
 
 
-# In case one needs to force a compiler, use these ones:
-# set(CMAKE_CXX_COMPILER "/_path_to_bin/g++")
-# set(CMAKE_C_COMPILER "/_path_to_bin/...")
-
-SET(CMAKE_CXX_FLAGS_RELEASE "")
-SET(CMAKE_CXX_FLAGS_DEBUG "")
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fPIC")
+# These compiler options are needed for compatibility with the Anaconda
+# boost library and CUDA, which requires gcc-8.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11")
 
 
 # add Voxelizer, either building from github or if VOXELIZER_ROOT
@@ -71,7 +66,6 @@ set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
 
 # Set default variables
 set( GENERATE_DOXYGEN_DOCS OFF )
-#set( Boost_NO_BOOST_CMAKE ON )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
