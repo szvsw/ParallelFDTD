@@ -8,7 +8,7 @@ project(parallelFDTD)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11")
 
 
-# add Voxelizer, either building from github or if VOXELIZER_ROOT
+# Add Voxelizer, either building from github or if VOXELIZER_ROOT
 # is given, use installation in that location
 if(NOT VOXELIZER_ROOT)
 
@@ -64,11 +64,24 @@ set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
 
 
+
 # Set default variables
 set( GENERATE_DOXYGEN_DOCS OFF )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
+
+
+# Check if we are in a conda environment and find boost there
+if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
+  message( STATUS "CONDA_PREFIX $ENV{CONDA_PREFIX}")
+  set( BOOST_ROOT "$ENV{CONDA_PREFIX}" )
+  set( Boost_NO_SYSTEM_PATHS ON )
+  set( Python_FIND_VIRTUALENV ONLY)
+endif()
+
+# Find CUDA and Python libraries
+find_package( CUDA REQUIRED )
 
 # if building for python2, enable python bindings
 if(BUILD_PYTHON2)
@@ -76,44 +89,36 @@ if(BUILD_PYTHON2)
 endif()
 
 
-# Find CUDA and Python libraries
-find_package( CUDA REQUIRED )
-find_package( PythonLibs REQUIRED)
 
-
-#If "find package" command gives errors, define the paths manually
-#set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
-#set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
-#set( BOOST_LIBRARYDIR ${BOOST_ROOT}/stage/lib)
-#set( BOOST_LIBRARYDIR /usr/lib64)
-
-
-# Require boost
-# List necessary boost libraries
-set(Boost_list "system thread date_time unit_test_framework")
-
-# On windows include the chrono library
-if(WIN32)
-  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono REQUIRED)
+# Find python and python libraries
+if(BUILD_PYTHON2)
+  find_package( Python REQUIRED)
+else()
+  find_package( Python REQUIRED)
 endif()
 
+
+# Find boost
 # Check the boost version to figure out the format of the python library
-if(UNIX)
-  FIND_PACKAGE(Boost)
-  if(Boost_VERSION_MINOR LESS 67 )
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python REQUIRED)
+#FIND_PACKAGE(Boost)
+if(Boost_VERSION_MINOR LESS 67 )
+
+  if(WIN32) # On windows include the chrono library
+    message( STATUS "WIN 66")
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono REQUIRED)
   else()
-    # with boost > 1.66, we need to specify the python version.
-    if(BUILD_PYTHON2)
-      # If building for python 2, just use 2.7. This is the last version that will exist.
-      set(Boost_list "${Boost_list} python2.7")
-      find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python2.7 REQUIRED)
-    else()
-      # Find python to set the version. This will find python 3
-      FIND_PACKAGE(Python)
-      find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
-    endif()
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python REQUIRED)
   endif()
+
+else()
+
+  # with boost > 1.66, we need to specify the python version.
+  if(WIN32) # On windows include the chrono library
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono REQUIRED)
+  else()
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
+  endif()
+
 endif()
 
 
