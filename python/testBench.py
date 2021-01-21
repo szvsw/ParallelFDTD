@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import json
 
 # The FDTD library is loaded as module
-import libPyFDTD as pf 
+import liblibPyFDTD as pf
 
 ###############################################################################
 # Assign simulation parameters
@@ -24,13 +24,13 @@ num_partition = 1
 
 src_type = 0 # 0: Hard, 1: Soft, 2: Transparent
 input_type = 1 # 0: Delta, 1: Gaussian, 2: Sine, 3: Given data
-input_data_idx = 0 
+input_data_idx = 0
 src = [0.5, 0.5, 0.5]
- 
+
 rec = [[0.6, 0.6, 0.6],
        [0.4, 0.4, 0.4]]
 
-visualization = True
+visualization = False
 captures = True
 
 ###############################################################################
@@ -38,21 +38,21 @@ captures = True
 ###############################################################################
 
 # A JSON importer is used in this case, any format which is possible
-# to import a geometry to the workspace can be used. 
-# The end product after parsing should be a list of vertices coordinates 
-# (in meters), and a list of triangle indices defining the geometry. 
+# to import a geometry to the workspace can be used.
+# The end product after parsing should be a list of vertices coordinates
+# (in meters), and a list of triangle indices defining the geometry.
 # Triangle indices have to start from 0.
 
 fp = "./Data/box.json"
 file_stream = open(fp)
-m = json.load(file_stream)    
+m = json.load(file_stream)
 file_stream.close()
 
 ###############################################################################
 # Parse the geometry from the data
 ###############################################################################
-vertices = np.reshape(m["vertices"], (np.size(m["vertices"])/3, 3))
-indices = np.reshape(m["indices"], (np.size(m["indices"])/3, 3))
+vertices = np.reshape(m["vertices"], (int(np.size(m["vertices"])/3), 3))
+indices = np.reshape(m["indices"], (int(np.size(m["indices"])/3), 3))
 
 ###############################################################################
 # Get the layer list, enumerate the surfaces on each layer
@@ -79,13 +79,13 @@ def reflection2Admittance(R):
 def absorption2Admittance(alpha):
     return reflection2Admittance(np.sqrt(1.0-alpha))
 
-num_triangles = np.size(indices)/3
+num_triangles = int(np.size(indices)/3)
 num_coef = 20 # Default number of coefficients
 
 R_glob = 0.99
 materials = np.ones((num_triangles, num_coef))*reflection2Admittance(R_glob)
 
-# Grab the triangle indices of the given layer from the 'layers' list. 
+# Grab the triangle indices of the given layer from the 'layers' list.
 # Assign a material to those triangles in the material list
 materials[layers['walls'], :] = reflection2Admittance(R_glob)
 materials[layers['ceiling'], :] = reflection2Admittance(R_glob)
@@ -96,7 +96,7 @@ materials[layers['floor'], :] = reflection2Admittance(R_glob)
 ###############################################################################
 
 # Captures of slices of the domain in certain time steps
-# size is Nx3, where N is the number of captures and the 
+# size is Nx3, where N is the number of captures and the
 # three parameters given are [slice, step, orientation]
 
 slice_n = 60
@@ -105,7 +105,7 @@ orientation = 1
 capture = [slice_n, step, orientation]
 
 ###############################################################################
-# Initialize and run the FDTD solver 
+# Initialize and run the FDTD solver
 ###############################################################################
 app = pf.App()
 app.initializeDevices()
