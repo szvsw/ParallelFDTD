@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 project(parallelFDTD)
 
 
+
 # These compiler options are needed for compatibility with the Anaconda
 # boost library and CUDA, which requires gcc-8.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11")
@@ -15,6 +16,7 @@ if(NOT VOXELIZER_ROOT)
   include(ExternalProject)
   ExternalProject_Add(Voxelizer
     GIT_REPOSITORY https://github.com/AaltoRSE/Voxelizer.git
+    CMAKE_ARGS "-DCUDA_COMPUTE=${CUDA_COMPUTE}"
   )
   set( VOXELIZER_ROOT ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/Voxelizer )
   set( VOXELIZER_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/ )
@@ -103,8 +105,6 @@ endif()
 
 
 
-
-
 # These are only needed for visualization
 if(BUILD_VISUALIZATION)
   add_definitions(-DCOMPILE_VISUALIZATION)
@@ -140,6 +140,27 @@ endif()
 
 
 
+# Set CUDA architecture
+if(CUDA_COMPUTE)
+  set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
+          -gencode arch=compute_${CUDA_COMPUTE},code=sm_${CUDA_COMPUTE}
+                             )
+
+  set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
+          -gencode arch=compute_${CUDA_COMPUTE},code=sm_${CUDA_COMPUTE}
+                             )
+else()
+  set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
+                         -gencode arch=compute_61,code=sm_61
+                         -gencode arch=compute_60,code=sm_60
+                         )
+  set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
+                         -gencode arch=compute_61,code=sm_61
+                         -gencode arch=compute_60,code=sm_60
+                         )
+endif()
+
+
 
 # List C++ source files
 set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
@@ -167,17 +188,6 @@ set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
                ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
 
 
-
-# Set CUDA architecture
-set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61
-                             -gencode arch=compute_60,code=sm_60
-                             )
-
-set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61
-                             -gencode arch=compute_60,code=sm_60
-                             )
 
 
 include_directories( ${VOXELIZER_INCLUDE_DIR} )
