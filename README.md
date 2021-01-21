@@ -3,39 +3,44 @@ Parallel FDTD
 
 A FDTD solver for room acoustics using CUDA.
 
-### Dependencies
-- Boost Libraries, tested on 1.53.0, 1.55.0 and 1.56.00,  http://www.boost.org/users/history/version_1_55_0.html, Accessed May 2014
-- CUDA 5.0-8.0, tested on compute capability 3.0 - 3.7, 5.2, 6.1
+## Dependencies
+
+### Must be installed on system
+- Anaconda (https://docs.anaconda.com/anaconda/install/) or Miniconda (https://docs.conda.io/en/latest/miniconda.html)
+- CUDA 5-10, tested on compute capability 3.0 - 6.1
 If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - Freeglut,  http://freeglut.sourceforge.net/ , Accessed May 2014  
 - GLEW, tested on 1.9.0, http://glew.sourceforge.net/, Accessed May 2014  
 
 ### For MPI execution
-- HDF5 libraries (serial libraries: hdf5 & hdf5_hl ; https://support.hdfgroup.org/HDF5/ )
-- HDF5 for python (https://pypi.python.org/pypi/h5py accessed January 11. 2016)
+- HDF5 libraries (install with `conda`, see below)
+- HDF5 for python (install with `conda`, see below)
 
-### For the Python interface
-- Python 2.7 or 3.7
-- NumPy (Tested on 1.8.2), SciPy (Tested on 0.13.3)
+### Installed through Anaconda
+These are most easily installed through Anaconda, following the instructions
+below. Alternatively they can be installed manually. In that case skip the
+`conda` commands in installation instructions.
+- Boost Libraries, tested on 1.75,  https://www.boost.org/users/history/version_1_75_0.html, Accessed January 2021
+- Python 2.7 or 3 (For the python interface)
+- NumPy, SciPy (For the python interface)
 
 
 The code is the most straightforward to compile with cmake. The cmake script contains  three targets: An executable which is to be used to check is the code running on the used machine and have and example of how the solver can be used from C++ code. Second target is a static library, which encapsulates the functionality. Third target is a dynamic library compiled with boost::python to allow the usage of the solver as a module in python interpreter.
 
-The Matlab interface is not updated and is not guaranteed to work with the updated library.
 
 Compiling
 =========
 
 The compilation has been tested on:
-- Ubuntu 14.04 LTS with GCC 4.8.4, CentOS 6, CentOS 7 with GCC 4.8.5
+- CentOS 6, CentOS 7 with GCC 6.3.0
 - Windows 7, Windows 10 with vc120, vc140 compilers
 - Triton, the Aalto University cluster
 
 ## 1. Download and install the dependencies  
 
-> ### On Triton
+> ### On the Aalto Triton cluster
 >
-> Load the dependencies with `module load anaconda gcc/6.5.0 cuda`.
+> Load the dependencies with `module load anaconda gcc/6.3.0 cuda matlab/r2019b`.
 > You also need to create the anaconda environment, see below.
 >
 > It is possible to compile on the login nodes, but the libraries might be different on the
@@ -45,64 +50,70 @@ The compilation has been tested on:
 > `sinteractive -t 1:00:00 --gres=gpu:1`.
 >
 
-The dependencies are handled most easily using Anaconda. Install it first following
-the instructions at https://docs.anaconda.com/anaconda/install/ (or install
-miniconda, https://docs.conda.io/en/latest/miniconda.html)
+The Boost library versions are handled most easily using Anaconda. Install
+it first following the instructions at
+https://docs.anaconda.com/anaconda/install/ (or install miniconda,
+https://docs.conda.io/en/latest/miniconda.html)
 
 Clone this repository. In the cloned folder create the Conda environment using
 (you can replace the environment name `PFDTD` with your own preference)
 ```
-1.1 cd ParallelFDTD
-1.2 conda env create -n PFDTD -f conda_environment.yml
+1.1 git clone git@github.com:AaltoRSE/ParallelFDTD.git
+1.2 cd ParallelFDTD
+1.3 conda env create -n PFDTD -f conda_environment.yml
 ```
 
 This will install compatible versions Boost and cmake into a new conda evironment.
 
 > ### Python 2
 >
-> To build for Python 2.7, create an environment use `conda_environment-py2.yml`
-> instead of `conda_environment.yml`
+> To build for Python 2.7, create the environment with
+> ```
+> conda env create -n PFDTD -f conda_environment.yml python=2.7
+> ```
 >
 > Python 2 is no longer developed and supporting it will not be possible
 > for long.
 
 Activate the new environment
 ```
-1.3 conda activate PFDTD
+1.4 conda activate PFDTD
 ```
 
-## 2. Configure the Cmake installation
-
-<!--
-Cmake should automatically find all required libraries. If not, check the CMakeLists.txt file for
-lines like
-```
-set( BOOST_ROOT "C:/Program Files/boost/boost_1_55_0" )
-set( Boost_INCLUDE_DIRS ${BOOST_ROOT})
-set( BOOST_LIBRARYDIR ${BOOST_ROOT}/lib)
-set( Boost_COMPILER "-vc140" )
-set( BOOST_LIBRARYDIR /usr/lib64)
-```
-
-Uncomment these and edit the values.
--->
-
-Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
+## 2. Build ParallelFDTD with CMAKE
 
 ```
-set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61
-[...]
-set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61
+4.1 go to the folder of the repository  
+4.2 mkdir build  
+4.3 cd build
 ```
 
-## 3. Build ParallelFDTD with CMAKE
 
+### WINDOWS
+
+Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
+
+```
+4.4 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
+4.5 nmake  
+```
+
+### Ubuntu / CentOS
+
+```
+4.4 cmake -DCMAKE_BUILD_TYPE=release ../
+4.5 make  
+```
+
+### Options
 > ### Voxelizer
 >
-> If Cmake fails to compile an external dependency called Voxelizer,
-> see the end of this document for details.
+> Cmake will compile and external dependency called Voxelizer. If you
+> prefer to use your own installation, see the end of this document.
+
+By default, the library will be compiled with CUDA compute capabilities 6.0 and
+6.1. This can be set by adding `-DCUDA_COMPUTE=` to the cmake command. For
+example to build only with compute capability 6.1, use `-DCUDA_COMPUTE=61`.
 
 To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
 ```
@@ -115,34 +126,12 @@ The python bindings in Boost have changed since the library was written and
 using them will take a bit more work. They would be compiled with
 `DBUILD_PYTHON=on`.
 
-```
-4.1 go to the folder of the repository  
-4.2 mkdir build  
-4.3 cd build
-```
 
-### WINDOWS
 
-Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
-
-```
-4.5 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
-4.6 nmake  
-4.7 nmake install  
-```
-
-### Ubuntu / CentOS
-
-```
-4.5 cmake -DCMAKE_BUILD_TYPE=release ../
-4.6 make  
-4.7 make install  
-```
-
-### 5. Compile MEX
+### 3. Compile MEX
 ```
   5.1 Start matlab  
-  5.2 go to the folder /ParallelFDTD/matlab  
+  5.2 go to the folder ParallelFDTD/matlab  
   5.3 Check that the library and include directories match the CMakeListst.txt
   5.4 type "compile"  
   5.5 if "compile done" message appears, test   
@@ -191,15 +180,6 @@ The details of running simulations are reviewed in the scripts matlab/testBench.
 
 Clone the Voxelizer library from https://github.com/AaltoRSE/Voxelizer.git. Follow the installation instructions found there.
 
-Depending on the GPU card you have, add the CUDA compute capabilities to the compilation flags of the CMakeLists.txt file. An example for 6.1 compute capability:
-```
-set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-                             -gencode arch=compute_61,code=sm_61
-[...]
-set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-                             -gencode arch=compute_61,code=sm_61
-```
-
 ```
 2.1 go to the folder of the repository  
 2.2 mkdir build
@@ -207,5 +187,8 @@ set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
 2.4 cmake ..
 2.5 make  
 ```
+
+If you will manually select CUDA compute capabilities for ParallelFDTD, also add
+the `-DCUDA_COMPUTE` flag also here.
 
 When compiling ParallelFDTD, add `-DVOXELIZER_ROOT=path_to_voxelizer` to the cmake command.
