@@ -381,7 +381,7 @@ struct enable_numpy_scalar_converter
   }
 };
 
-BOOST_PYTHON_MODULE(libPyFDTD) {
+BOOST_PYTHON_MODULE(liblibPyFDTD) {
   //boost::python::numpy::set_module_and_type("numpy", "ndarray");
 
   enable_numpy_scalar_converter<boost::uint8_t, NPY_UBYTE>();
