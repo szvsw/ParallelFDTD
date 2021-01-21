@@ -96,13 +96,15 @@ Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 ```
 4.4 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
 4.5 nmake  
+4.6 nmake install
 ```
 
 ### Ubuntu / CentOS
 
 ```
 4.4 cmake -DCMAKE_BUILD_TYPE=release ../
-4.5 make  
+4.5 make
+4.6 make install
 ```
 
 ### Options
