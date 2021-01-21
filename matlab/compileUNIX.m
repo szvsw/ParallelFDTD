@@ -5,9 +5,12 @@ fprintf('Compiling  mex_FDTD\n');
 cudaLibraries =  '-lcudart -lcuda ';
 %glutAndGLlibraries = '-lglut -lGLU -lGL ';
 %glewLibrary = '-l"/usr/lib/x86_64-linux-gnu/libGLEW.so" ';
-boostLibraries = '-lboost_thread-mt -lboost_system-mt -lboost_date_time-mt ';
+boostLibraries = '-lboost_thread -lboost_system -lboost_date_time ';
 mexSpesificLibraries = '-lmx -lut ';
 FDTDlibraries = '-llibParallelFDTD -lVoxelizer';
+additionalLibPath =  './lib/';
+
+conda_path = getenv('CONDA_PREFIX')
 
 % Whole link command
 link_flags = [cudaLibraries, ...
@@ -16,8 +19,9 @@ link_flags = [cudaLibraries, ...
               FDTDlibraries
               ];
 
-compile_command = ['mex -L"' additionalLibPath '" ', ...
-                  link_flags]
+compile_command = ['mex -v -L"' additionalLibPath '" ', ...
+                   '-L' conda_path '/lib -I' conda_path '/include ', ...
+                   link_flags]
 
 % Compile
 eval([compile_command ' device_reset.cpp ']);
