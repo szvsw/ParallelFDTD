@@ -38,33 +38,6 @@ endif()
 
 
 
-# List C++ source files
-set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
-                ${CMAKE_SOURCE_DIR}/src/base/MaterialHandler.cpp
-                ${CMAKE_SOURCE_DIR}/src/base/SimulationParameters.cpp
-                ${CMAKE_SOURCE_DIR}/src/base/SrcRec.cpp
-                ${CMAKE_SOURCE_DIR}/src/io/FileReader.cpp
-                ${CMAKE_SOURCE_DIR}/src/io/Image.cpp
-                ${CMAKE_SOURCE_DIR}/src/App.cpp
-                ${CMAKE_SOURCE_DIR}/src/logger.cpp )
-
-if(BUILD_VISUALIZATION)
-  set(SOURCES_CPP ${SOURCES_CPP} ${CMAKE_SOURCE_DIR}/src/gl/AppWindow.cpp
-                                 ${CMAKE_SOURCE_DIR}/src/gl/AppPbo.cpp
-                                 ${CMAKE_SOURCE_DIR}/src/gl/AppVbo.cpp
-                                 ${CMAKE_SOURCE_DIR}/src/gl/glHelpers.cpp
-                                 ${CMAKE_SOURCE_DIR}/src/base/cameraProto.cpp)
-endif()
-
-# List CUDA source files
-set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
-               ${CMAKE_SOURCE_DIR}/src/kernels/visualizationUtils.cu
-               ${CMAKE_SOURCE_DIR}/src/kernels/voxelizationUtils.cu
-               ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.cu
-               ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
-
-
-
 # Set default variables
 set( GENERATE_DOXYGEN_DOCS OFF )
 set( Boost_USE_STATIC_LIBS ON )
@@ -91,12 +64,8 @@ endif()
 
 
 # Find python and python libraries
-if(BUILD_PYTHON2)
-  find_package( Python REQUIRED)
-else()
-  find_package( Python REQUIRED)
-endif()
-
+find_package( Python REQUIRED)
+find_package( PythonLibs REQUIRED)
 
 # Find boost
 # Check the boost version to figure out the format of the python library
@@ -120,6 +89,20 @@ else()
   endif()
 
 endif()
+
+
+if(Boost_USE_STATIC_RUNTIME)
+  foreach(flag_var
+          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+     if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+     endif(${flag_var} MATCHES "/MD")
+  endforeach(flag_var)
+endif()
+
+
+
 
 
 # These are only needed for visualization
@@ -156,16 +139,36 @@ endif()
 #endif()
 
 
-if(Boost_USE_STATIC_RUNTIME)
-  foreach(flag_var
-          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-     if(${flag_var} MATCHES "/MD")
-        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-     endif(${flag_var} MATCHES "/MD")
-  endforeach(flag_var)
+
+
+# List C++ source files
+set(SOURCES_CPP ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.cpp
+                ${CMAKE_SOURCE_DIR}/src/base/MaterialHandler.cpp
+                ${CMAKE_SOURCE_DIR}/src/base/SimulationParameters.cpp
+                ${CMAKE_SOURCE_DIR}/src/base/SrcRec.cpp
+                ${CMAKE_SOURCE_DIR}/src/io/FileReader.cpp
+                ${CMAKE_SOURCE_DIR}/src/io/Image.cpp
+                ${CMAKE_SOURCE_DIR}/src/App.cpp
+                ${CMAKE_SOURCE_DIR}/src/logger.cpp )
+
+if(BUILD_VISUALIZATION)
+  set(SOURCES_CPP ${SOURCES_CPP} ${CMAKE_SOURCE_DIR}/src/gl/AppWindow.cpp
+                                 ${CMAKE_SOURCE_DIR}/src/gl/AppPbo.cpp
+                                 ${CMAKE_SOURCE_DIR}/src/gl/AppVbo.cpp
+                                 ${CMAKE_SOURCE_DIR}/src/gl/glHelpers.cpp
+                                 ${CMAKE_SOURCE_DIR}/src/base/cameraProto.cpp)
 endif()
 
+# List CUDA source files
+set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
+               ${CMAKE_SOURCE_DIR}/src/kernels/visualizationUtils.cu
+               ${CMAKE_SOURCE_DIR}/src/kernels/voxelizationUtils.cu
+               ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.cu
+               ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.cu )
+
+
+
+# Set CUDA architecture
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
                              -gencode arch=compute_61,code=sm_61
                              -gencode arch=compute_60,code=sm_60
@@ -176,14 +179,16 @@ set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
                              -gencode arch=compute_60,code=sm_60
                              )
 
+
+include_directories( ${VOXELIZER_INCLUDE_DIR} )
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories( ${OPENGL_INCLUDE_DIR} )
 include_directories( ${Boost_INCLUDE_DIRS} )
 include_directories( ${GLUT_INCLUDE_DIR} )
 include_directories( ${GLEW_INCLUDE_DIRS} )
-include_directories( ${VOXELIZER_INCLUDE_DIR} )
 include_directories( ${PYTHON_INCLUDE_DIRS} )
-include_directories(${CMAKE_SOURCE_DIR}/include)
 
+# Print some useful information
 message( STATUS "CUDA root: ${CUDA_TOOLKIT_ROOT_DIR}")
 message( STATUS "Voxelizer ROOT: ${VOXELIZER_ROOT}" )
 message( STATUS "OpenGL include dir: ${OPENGL_INCLUDE_DIR}" )
@@ -206,12 +211,16 @@ message( STATUS "CMAKE_CXX_COMPILER_VERSION : ${CMAKE_CXX_COMPILER_VERSION}" )
 
 message( STATUS "Doxygen ${GENERATE_DOXYGEN_DOCS}")
 
+
+# Include the source directory
 add_subdirectory(src)
 
 if(BUILD_TESTS)
+  # and the test directory
   add_subdirectory(tests)
 endif()
 
 if ( GENERATE_DOXYGEN_DOCS )
+  # also build documentition
   add_subdirectory( doc )
 endif ()
