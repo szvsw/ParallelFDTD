@@ -19,7 +19,7 @@ if(NOT VOXELIZER_ROOT)
   include(ExternalProject)
   ExternalProject_Add(Voxelizer
     GIT_REPOSITORY https://github.com/AaltoRSE/Voxelizer.git
-    CMAKE_ARGS "-DCUDA_COMPUTE=${CUDA_COMPUTE}"
+    CMAKE_ARGS "-DCUDA_GENCODE=${CUDA_GENCODE}"
   )
   set( VOXELIZER_ROOT ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/Voxelizer )
   set( VOXELIZER_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/Voxelizer-prefix/src/ )
@@ -144,22 +144,28 @@ endif()
 
 
 # Set CUDA architecture
-if(CUDA_COMPUTE)
+if(CUDA_GENCODE)
   set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
-          -gencode arch=compute_${CUDA_COMPUTE},code=sm_${CUDA_COMPUTE}
-                             )
+                            -gencode ${CUDA_GENCODE}
+                          )
 
   set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
-          -gencode arch=compute_${CUDA_COMPUTE},code=sm_${CUDA_COMPUTE}
-                             )
+                            -gencode ${CUDA_GENCODE}
+                          )
 else()
   set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
+                         -gencode arch=compute_60,code=sm_70
                          -gencode arch=compute_61,code=sm_61
                          -gencode arch=compute_60,code=sm_60
+                         -gencode arch=compute_52,code=sm_52
+                         -gencode arch=compute_37,code=sm_37
                          )
   set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
+                        -gencode arch=compute_60,code=sm_70
                          -gencode arch=compute_61,code=sm_61
                          -gencode arch=compute_60,code=sm_60
+                         -gencode arch=compute_52,code=sm_52
+                         -gencode arch=compute_37,code=sm_37
                          )
 endif()
 
