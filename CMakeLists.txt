@@ -6,10 +6,7 @@ project(parallelFDTD CXX CUDA)
 # These compiler options are needed for compatibility with the Anaconda
 # boost library and CUDA, which requires gcc-8.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11 -fPIC")
-
-
-# Compile position independent code for the library
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DBOOST_SYSTEM_NO_LIB -Xcompiler -fPIC")
 
 
 # Add Voxelizer, either building from github or if VOXELIZER_ROOT
@@ -43,13 +40,12 @@ elseif(UNIX)
 endif()
 
 
-
 # Set default variables
 set( GENERATE_DOXYGEN_DOCS OFF )
+set( Boost_NO_BOOST_CMAKE ON )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
-
 
 # Check if we are in a conda environment and find boost there
 if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
@@ -67,6 +63,9 @@ find_package( PythonLibs REQUIRED)
 # Find boost
 # Check the boost version to figure out the format of the python library
 #FIND_PACKAGE(Boost)
+message( STATUS "CONDA_PREFIX $ENV{CONDA_PREFIX}")
+if(BUILD_PYTHON)
+
 if(Boost_VERSION_MINOR LESS 67 )
 
   if(WIN32) # On windows include the chrono library
@@ -84,8 +83,20 @@ else()
   else()
     find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} numpy REQUIRED)
   endif()
+endif()
+
+
+else()
+# No python bindings
+
+if(WIN32) # On windows include the chrono library
+  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework chrono REQUIRED)
+else()
+  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework REQUIRED)
+endif()
 
 endif()
+
 
 
 if(Boost_USE_STATIC_RUNTIME)

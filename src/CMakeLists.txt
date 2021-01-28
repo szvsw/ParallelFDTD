@@ -22,6 +22,9 @@ target_link_libraries( libParallelFDTD ${GLUT_LIBRARIES}
 
 if(BUILD_PYTHON)
   add_library( libPyFDTD SHARED ${SOURCES_CPP} ${SOURCES_CU} ${CMAKE_SOURCE_DIR}/src/AppPy.cpp)
+  if(BUILD_VOXELIZER)
+    add_dependencies(libPyFDTD Voxelizer)
+  endif()
   target_link_libraries( libPyFDTD ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES} ${VOXELIZER_LIB}  ${unix_specific_libraries}
         ${PYTHON_LIBRARIES} ${Boost_LIBRARIES}
