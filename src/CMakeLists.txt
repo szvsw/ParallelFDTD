@@ -1,18 +1,18 @@
 
-#cuda_add_library( libParallelFDTD ${SOURCES_CPP} ${SOURCES_CU} )
+cuda_add_library( libParallelFDTD ${SOURCES_CPP} ${SOURCES_CU} )
 
-#cuda_add_executable( testExec main.cpp ${SOURCES_CPP} ${SOURCES_CU} )
+cuda_add_executable( testExec main.cpp ${SOURCES_CPP} ${SOURCES_CU} )
 
-#target_link_libraries(testExec ${GLUT_LIBRARIES}
-#                ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
-#                ${VOXELIZER_LIB}
-#                ${Boost_LIBRARIES} ${unix_specific_libraries})
+target_link_libraries(testExec ${GLUT_LIBRARIES}
+                ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
+                ${VOXELIZER_LIB}
+                ${Boost_LIBRARIES} ${unix_specific_libraries})
 
-#target_link_libraries( libParallelFDTD ${GLUT_LIBRARIES}
-#                  ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
-#                  ${VOXELIZER_LIB}
-#                  ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
-#                  ${Boost_DATE_TIME_LIBRARY} ${unix_specific_libraries})
+target_link_libraries( libParallelFDTD ${GLUT_LIBRARIES}
+                  ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
+                  ${VOXELIZER_LIB}
+                  ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
+                  ${Boost_DATE_TIME_LIBRARY} ${unix_specific_libraries})
 
 
 if(BUILD_PYTHON)
@@ -28,23 +28,23 @@ if(BUILD_PYTHON)
 
   if(WIN32)
     if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
-      install(FILES ${CMAKE_BINARY_DIR}/python//liblibPyFDTD.lib DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
+      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
     else()
-      install(FILES ${CMAKE_BINARY_DIR}/python//liblibPyFDTD.lib DESTINATION ${CMAKE_SOURCE_DIR}/python/)
+      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION ${CMAKE_SOURCE_DIR}/python/)
     endif()
   endif()
   if(UNIX)
     if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
-      install(FILES ${CMAKE_BINARY_DIR}/python//liblibPyFDTD.so DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
+      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
     else()
-      install(FILES ${CMAKE_BINARY_DIR}/python//liblibPyFDTD.so DESTINATION ${CMAKE_SOURCE_DIR}/python/)
+      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION ${CMAKE_SOURCE_DIR}/python/)
     endif()
   endif()
 endif()
 
 
-#set_target_properties( testExec PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/ )
-#set_target_properties( libParallelFDTD PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/ )
+set_target_properties( testExec PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/ )
+set_target_properties( libParallelFDTD PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/ )
 
 if(WIN32)
 install(FILES ${CMAKE_SOURCE_DIR}/lib/libParallelFDTD.lib ${VOXELIZER_LIB_PATH}/Voxelizer.lib
