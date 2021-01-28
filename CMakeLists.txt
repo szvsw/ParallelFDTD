@@ -8,7 +8,7 @@ project(parallelFDTD)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11 -fPIC")
 
 
-# Compile position independent code for the libarary
+# Compile position independent code for the library
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 
