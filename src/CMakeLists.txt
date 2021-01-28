@@ -1,7 +1,12 @@
 
-cuda_add_library( libParallelFDTD ${SOURCES_CPP} ${SOURCES_CU} )
+add_library( libParallelFDTD ${SOURCES_CPP} ${SOURCES_CU} )
 
-cuda_add_executable( testExec main.cpp ${SOURCES_CPP} ${SOURCES_CU} )
+add_executable( testExec main.cpp ${SOURCES_CPP} ${SOURCES_CU} )
+
+if(BUILD_VOXELIZER)
+  add_dependencies(libParallelFDTD Voxelizer)
+  add_dependencies(testExec Voxelizer)
+endif()
 
 target_link_libraries(testExec ${GLUT_LIBRARIES}
                 ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
@@ -16,7 +21,7 @@ target_link_libraries( libParallelFDTD ${GLUT_LIBRARIES}
 
 
 if(BUILD_PYTHON)
-  cuda_add_library( libPyFDTD SHARED ${SOURCES_CPP} ${SOURCES_CU} ${CMAKE_SOURCE_DIR}/src/AppPy.cpp)
+  add_library( libPyFDTD SHARED ${SOURCES_CPP} ${SOURCES_CU} ${CMAKE_SOURCE_DIR}/src/AppPy.cpp)
   target_link_libraries( libPyFDTD ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES} ${VOXELIZER_LIB}  ${unix_specific_libraries}
         ${PYTHON_LIBRARIES} ${Boost_LIBRARIES}
