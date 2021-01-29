@@ -6,7 +6,7 @@ project(parallelFDTD CXX CUDA)
 # These compiler options are needed for compatibility with the Anaconda
 # boost library and CUDA, which requires gcc-8.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11 -fPIC")
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DBOOST_SYSTEM_NO_LIB -Xcompiler -fPIC")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DBOOST_SYSTEM_NO_LIB -Xcompiler -std=gnu++11 -Xcompiler -fPIC")
 
 
 # Add Voxelizer, either building from github or if VOXELIZER_ROOT
