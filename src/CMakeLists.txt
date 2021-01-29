@@ -1,6 +1,5 @@
 
 add_library( libParallelFDTD ${SOURCES_CPP} ${SOURCES_CU} )
-
 add_executable( testExec main.cpp ${SOURCES_CPP} ${SOURCES_CU} )
 
 if(BUILD_VOXELIZER)
@@ -50,18 +49,29 @@ if(BUILD_PYTHON)
   endif()
 endif()
 
+set_target_properties( testExec PROPERTIES
+   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/
+)
+set_target_properties( libParallelFDTD PROPERTIES
+   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/
+   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/
+)
 
-set_target_properties( testExec PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/ )
-set_target_properties( libParallelFDTD PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/ )
+matlab_add_mex(NAME mem_check SRC ${CMAKE_SOURCE_DIR}/matlab/mem_check.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
+matlab_add_mex(NAME mex_FDTD SRC ${CMAKE_SOURCE_DIR}/matlab/mex_FDTD.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
+matlab_add_mex(NAME device_reset SRC ${CMAKE_SOURCE_DIR}/matlab/device_reset.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
 
-if(WIN32)
-install(FILES ${CMAKE_SOURCE_DIR}/lib/libParallelFDTD.lib ${VOXELIZER_LIB_PATH}/Voxelizer.lib
-        DESTINATION ${CMAKE_SOURCE_DIR}/matlab/lib/)
-endif()
-if(UNIX)
-install(FILES ${CMAKE_SOURCE_DIR}/lib/liblibParallelFDTD.a ${VOXELIZER_LIB_PATH}/libVoxelizer.a
-        DESTINATION ${CMAKE_SOURCE_DIR}/matlab/lib/)
-endif()
+set_target_properties( mem_check PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/
+)
+set_target_properties( mex_FDTD PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/
+)
+set_target_properties( device_reset PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/
+)
+
+
 
 install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
               ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.h
@@ -92,3 +102,11 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/App.h
               ${CMAKE_SOURCE_DIR}/src/global_includes.h
               ${CMAKE_SOURCE_DIR}/src/logger.h
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/)
+
+install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
+        DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/base/)
+
+install(FILES ${CMAKE_BINARY_DIR}/Matlab/device_reset.mexa64
+              ${CMAKE_BINARY_DIR}/Matlab/mem_check.mexa64
+              ${CMAKE_BINARY_DIR}/Matlab/mex_FDTD.mexa64
+        DESTINATION ${CMAKE_SOURCE_DIR}/matlab/)

@@ -189,9 +189,12 @@ set(SOURCES_CU ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.cu
 
 
 
+find_package(Matlab)
+
+
 
 include_directories( ${VOXELIZER_INCLUDE_DIR} )
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories( ${CMAKE_SOURCE_DIR}/include)
 include_directories( ${OPENGL_INCLUDE_DIR} )
 include_directories( ${Boost_INCLUDE_DIRS} )
 include_directories( ${GLUT_INCLUDE_DIR} )
