@@ -2,9 +2,10 @@
 #SBATCH --time=00:10:00
 #SBATCH -p gpu
 #SBATCH -o LOG_FILE.out
-#SBATCH --gres=gpu:teslap100:1
+#SBATCH --gres=gpu:1
 
-module load gcc/6.3.0 cuda matlab 
+# load the necessary modules
+module load gcc/6.3.0 cuda matlab/r2019b
 
 # Run the job
 
