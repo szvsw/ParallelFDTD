@@ -130,18 +130,12 @@ using them will take a bit more work. They would be compiled with
 
 
 
-### 3. Compile MEX
-```
-  5.1 Start matlab  
-  5.2 go to the folder ParallelFDTD/matlab  
-  5.3 Check that the library and include directories match the CMakeListst.txt
-  5.4 type "compile"  
-  5.5 if "compile done" message appears, test   
-      the solver by running the testBench.m script
-```
+### 3. Matlab
 
-The solver should be good to go! Following the testBench.m it should be quite
-straightforward to generate run scripts for your needs.
+The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
+The directory also contains a test script, `testBench.m`, which you can also
+use for reference. The next section contains more detail on using the library.
+
 
 Practicalities
 ==============
