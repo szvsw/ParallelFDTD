@@ -194,7 +194,12 @@ find_package(Matlab)
 
 
 include_directories( ${VOXELIZER_INCLUDE_DIR} )
-include_directories( ${CMAKE_SOURCE_DIR}/include)
+include_directories( ${CMAKE_SOURCE_DIR}/src)
+include_directories( ${CMAKE_SOURCE_DIR}/src/base)
+include_directories( ${CMAKE_SOURCE_DIR}/src/gl)
+include_directories( ${CMAKE_SOURCE_DIR}/src/io)
+include_directories( ${CMAKE_SOURCE_DIR}/src/kernels)
+include_directories( ${CMAKE_SOURCE_DIR}/src/math)
 include_directories( ${OPENGL_INCLUDE_DIR} )
 include_directories( ${Boost_INCLUDE_DIRS} )
 include_directories( ${GLUT_INCLUDE_DIR} )
