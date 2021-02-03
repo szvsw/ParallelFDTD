@@ -2,7 +2,7 @@
 #define MEX_SOLVER_INCLUDES_H
 
 
-#include "./includes/App.h"
+#include "App.h"
 
 
 #endif
