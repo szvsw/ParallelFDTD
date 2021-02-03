@@ -193,18 +193,12 @@ find_package(Matlab)
 
 
 
-include_directories( ${VOXELIZER_INCLUDE_DIR} )
-include_directories( ${CMAKE_SOURCE_DIR}/src)
-include_directories( ${CMAKE_SOURCE_DIR}/src/base)
-include_directories( ${CMAKE_SOURCE_DIR}/src/gl)
-include_directories( ${CMAKE_SOURCE_DIR}/src/io)
-include_directories( ${CMAKE_SOURCE_DIR}/src/kernels)
-include_directories( ${CMAKE_SOURCE_DIR}/src/math)
-include_directories( ${OPENGL_INCLUDE_DIR} )
-include_directories( ${Boost_INCLUDE_DIRS} )
-include_directories( ${GLUT_INCLUDE_DIR} )
-include_directories( ${GLEW_INCLUDE_DIRS} )
-include_directories( ${PYTHON_INCLUDE_DIRS} )
+include_directories( ${VOXELIZER_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src
+                     ${CMAKE_SOURCE_DIR}/src/base ${CMAKE_SOURCE_DIR}/src/gl
+                     ${CMAKE_SOURCE_DIR}/src/io ${CMAKE_SOURCE_DIR}/src/kernels
+                     ${CMAKE_SOURCE_DIR}/src/math ${OPENGL_INCLUDE_DIR} 
+                     ${Boost_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR} 
+                     ${GLEW_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} )
 
 # Print some useful information
 message( STATUS "CUDA root: ${CUDA_TOOLKIT_ROOT_DIR}")

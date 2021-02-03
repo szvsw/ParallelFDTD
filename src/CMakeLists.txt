@@ -90,10 +90,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/math/geomMath.h
               ${CMAKE_SOURCE_DIR}/src/math/Vector.h
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/math/)
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/App.h
-              ${CMAKE_SOURCE_DIR}/src/global_includes.h
-              ${CMAKE_SOURCE_DIR}/src/logger.h
-              DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/)
 
 install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
         DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/base/)
