@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:1
 
 # load the necessary modules
-module load gcc/6.3.0 cuda matlab/r2019b
+module load matlab/r2019b
 
 # Run the job
 
