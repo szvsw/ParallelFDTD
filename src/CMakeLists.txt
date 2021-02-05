@@ -57,13 +57,8 @@ set_target_properties( libParallelFDTD PROPERTIES
    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/
 )
 
-matlab_add_mex(NAME mem_check SRC ${CMAKE_SOURCE_DIR}/matlab/mem_check.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
-matlab_add_mex(NAME mex_FDTD SRC ${CMAKE_SOURCE_DIR}/matlab/mex_FDTD.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
-matlab_add_mex(NAME device_reset SRC ${CMAKE_SOURCE_DIR}/matlab/device_reset.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
 
-set_target_properties( mem_check PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
-set_target_properties( mex_FDTD PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
-set_target_properties( device_reset PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
+
 
 install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
               ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.h
@@ -94,7 +89,18 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/math/geomMath.h
 install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
         DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/base/)
 
-install(FILES ${CMAKE_BINARY_DIR}/Matlab/device_reset.mexa64
-              ${CMAKE_BINARY_DIR}/Matlab/mem_check.mexa64
-              ${CMAKE_BINARY_DIR}/Matlab/mex_FDTD.mexa64
-        DESTINATION ${CMAKE_SOURCE_DIR}/matlab/)
+
+if(BUILD_MATLAB)
+  matlab_add_mex(NAME mem_check SRC ${CMAKE_SOURCE_DIR}/matlab/mem_check.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
+  matlab_add_mex(NAME mex_FDTD SRC ${CMAKE_SOURCE_DIR}/matlab/mex_FDTD.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
+  matlab_add_mex(NAME device_reset SRC ${CMAKE_SOURCE_DIR}/matlab/device_reset.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
+
+  set_target_properties( mem_check PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
+  set_target_properties( mex_FDTD PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
+  set_target_properties( device_reset PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Matlab/)
+
+  install(FILES ${CMAKE_BINARY_DIR}/Matlab/device_reset.mexa64
+                ${CMAKE_BINARY_DIR}/Matlab/mem_check.mexa64
+                ${CMAKE_BINARY_DIR}/Matlab/mex_FDTD.mexa64
+          DESTINATION ${CMAKE_SOURCE_DIR}/matlab/)
+endif()
