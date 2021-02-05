@@ -7,3 +7,5 @@ dependencies:
   - cmake
   - cudatoolkit=11
   - cudatoolkit-dev
+  - freeglut
+  - glew
