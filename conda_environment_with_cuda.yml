@@ -5,3 +5,5 @@ dependencies:
   - boost
   - py-boost
   - cmake
+  - cudatoolkit=11
+  - cudatoolkit-dev
