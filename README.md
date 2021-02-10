@@ -43,8 +43,6 @@ The compilation has been tested on:
 > Load the dependencies with `module load anaconda gcc/6.3.0 cuda matlab/r2019b`.
 > You also need to create the anaconda environment, see below.
 >
-> It is possible to compile on the login nodes, but the libraries might be different on the
-> compute nodes.
 >
 > To compile on a gpu node, start an interactive session using
 > `sinteractive -t 1:00:00 --gres=gpu:1`.
