@@ -5,7 +5,9 @@ dependencies:
   - boost
   - py-boost
   - cmake
-  - cudatoolkit=11
+  - cudatoolkit
+  - cudnn
   - cudatoolkit-dev
   - freeglut
   - glew
+  - mesalib
