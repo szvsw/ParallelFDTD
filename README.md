@@ -11,6 +11,7 @@ A FDTD solver for room acoustics using CUDA.
 If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - Freeglut,  http://freeglut.sourceforge.net/ , Accessed May 2014  
 - GLEW, tested on 1.9.0, http://glew.sourceforge.net/, Accessed May 2014  
+- The Matlab bindings require Matlab r2019b.
 
 ### For MPI execution
 - HDF5 libraries (install with `conda`, see below)
@@ -23,6 +24,7 @@ below. Alternatively they can be installed manually. In that case skip the
 - Boost Libraries, tested on 1.75,  https://www.boost.org/users/history/version_1_75_0.html, Accessed January 2021
 - Python 2.7 or 3 (For the python interface)
 - NumPy, SciPy (For the python interface)
+
 
 
 The code is the most straightforward to compile with cmake. The cmake script contains  three targets: An executable which is to be used to check is the code running on the used machine and have and example of how the solver can be used from C++ code. Second target is a static library, which encapsulates the functionality. Third target is a dynamic library compiled with boost::python to allow the usage of the solver as a module in python interpreter.
@@ -40,9 +42,8 @@ The compilation has been tested on:
 
 > ### On the Aalto Triton cluster
 >
-> Load the dependencies with `module load anaconda gcc/6.3.0 cuda matlab/r2019b`.
+> Load the dependencies with `module load anaconda gcc/6.5.0 cuda matlab/r2019b`.
 > You also need to create the anaconda environment, see below.
->
 >
 > To compile on a gpu node, start an interactive session using
 > `sinteractive -t 1:00:00 --gres=gpu:1`.
@@ -111,9 +112,15 @@ Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 > Cmake will compile and external dependency called Voxelizer. If you
 > prefer to use your own installation, see the end of this document.
 
-By default, the library will be compiled with CUDA compute capabilities 6.0 and
-6.1. This can be set by adding `-DCUDA_COMPUTE=` to the cmake command. For
-example to build only with compute capability 6.1, use `-DCUDA_COMPUTE=61`.
+To build the python bindings use `-DBUILD_PYTHON=on` and to build the Matlab
+bindings use `-DBUILD_MATLAB=on`.
+
+You can set the CUDA compute capabilities and architectures using the
+`-CUDA_GENCODE=` flag to the cmake command. For example to build only with
+compute capability 6.1, use `-DCUDA_COMPUTE=arch=compute_61,code=sm_61`.
+The default without this flag is to compile for set of architectures from 3.7
+to 7.0, but using compute capability 6.1 for the architecture 7.0. This is
+compatible with CUDA 10.2 and Nvidia GPUs up to Tesla V100.
 
 To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
 ```
@@ -122,17 +129,24 @@ To build the tests, python module (for linux only) and visualization, use the fo
 ```
 with the cmake command.
 
-The python bindings in Boost have changed since the library was written and
-using them will take a bit more work. They would be compiled with
-`DBUILD_PYTHON=on`.
-
-
-
 ### 3. Matlab
+
+To build the Matlab bindings use `-DBUILD_MATLAB=on`.
 
 The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
 The directory also contains a test script, `testBench.m`, which you can also
 use for reference. The next section contains more detail on using the library.
+
+### 4. Python
+
+To build the Matlab bindings use `-DBUILD_PYTHON=on`.
+
+If you are compiling in the Anaconda environment, the python library has been
+copied into environment. For now, conda and pip do not know about it, but you
+can import it. From anywhere.
+
+The `ParallelFDTD/python` folder contains a test script called `testBench.py`.
+You can use it for reference and read below for some more details.
 
 
 Practicalities
