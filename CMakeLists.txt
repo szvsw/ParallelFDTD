@@ -1,4 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+
+
 #The name of the project
 project(parallelFDTD CXX CUDA)
 
@@ -196,8 +198,8 @@ find_package(Matlab)
 include_directories( ${VOXELIZER_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src
                      ${CMAKE_SOURCE_DIR}/src/base ${CMAKE_SOURCE_DIR}/src/gl
                      ${CMAKE_SOURCE_DIR}/src/io ${CMAKE_SOURCE_DIR}/src/kernels
-                     ${CMAKE_SOURCE_DIR}/src/math ${OPENGL_INCLUDE_DIR} 
-                     ${Boost_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR} 
+                     ${CMAKE_SOURCE_DIR}/src/math ${OPENGL_INCLUDE_DIR}
+                     ${Boost_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR}
                      ${GLEW_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} )
 
 # Print some useful information

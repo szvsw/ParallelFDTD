@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import json
 
 # The FDTD library is loaded as module
-import liblibPyFDTD as pf
+import pyParallelFDTD as pf
 
 ###############################################################################
 # Assign simulation parameters

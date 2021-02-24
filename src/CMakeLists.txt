@@ -20,6 +20,8 @@ target_link_libraries( libParallelFDTD ${GLUT_LIBRARIES}
 
 
 if(BUILD_PYTHON)
+  set(PYTHON_DIST_PATH "${CMAKE_SOURCE_DIR}/dist/libPyFDTD/")
+
   add_library( libPyFDTD SHARED ${SOURCES_CPP} ${SOURCES_CU} ${CMAKE_SOURCE_DIR}/src/AppPy.cpp)
   if(BUILD_VOXELIZER)
     add_dependencies(libPyFDTD Voxelizer)
@@ -34,19 +36,12 @@ if(BUILD_PYTHON)
   )
 
   if(WIN32)
-    if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
-      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
-    else()
-      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION ${CMAKE_SOURCE_DIR}/python/)
-    endif()
+    install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION ${PYTHON_DIST_PATH})
   endif()
   if(UNIX)
-    if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
-      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION $ENV{CONDA_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/)
-    else()
-      install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION ${CMAKE_SOURCE_DIR}/python/)
-    endif()
+    install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION ${PYTHON_DIST_PATH})
   endif()
+
 endif()
 
 set_target_properties( testExec PROPERTIES
