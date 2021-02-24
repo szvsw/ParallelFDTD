@@ -14,6 +14,7 @@
 
 /python/*
 !/python/Data
+!/python/src
 !/python/testBench.py
 !/python/FDTDfilter.py
 
@@ -57,4 +58,3 @@ solver_log.txt
 *.la
 *.a
 *.gch
-
