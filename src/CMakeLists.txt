@@ -36,7 +36,7 @@ if(BUILD_PYTHON)
   )
 
   if(WIN32)
-    install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.lib DESTINATION ${PYTHON_DIST_PATH})
+    install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.dll DESTINATION ${PYTHON_DIST_PATH})
   endif()
   if(UNIX)
     install(FILES ${CMAKE_BINARY_DIR}/python/liblibPyFDTD.so DESTINATION ${PYTHON_DIST_PATH})
@@ -54,8 +54,8 @@ set_target_properties( libParallelFDTD PROPERTIES
 
 
 
-
-install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
+if(BUILD_MATLAB)
+  install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
               ${CMAKE_SOURCE_DIR}/src/base/GeometryHandler.h
               ${CMAKE_SOURCE_DIR}/src/base/MaterialHandler.h
               ${CMAKE_SOURCE_DIR}/src/base/SimulationParameters.h
@@ -63,29 +63,28 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/base/)
 
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/io/FileReader.h
+  install(FILES ${CMAKE_SOURCE_DIR}/src/io/FileReader.h
               ${CMAKE_SOURCE_DIR}/src/io/Image.h
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/io/)
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.h
+  install(FILES ${CMAKE_SOURCE_DIR}/src/kernels/cudaMesh.h
               ${CMAKE_SOURCE_DIR}/src/kernels/cudaUtils.h
               ${CMAKE_SOURCE_DIR}/src/kernels/kernels3d.h
               ${CMAKE_SOURCE_DIR}/src/kernels/visualizationUtils.h
               ${CMAKE_SOURCE_DIR}/src/kernels/voxelizationUtils.h
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/kernels/)
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/math/geomMath.h
+  install(FILES ${CMAKE_SOURCE_DIR}/src/math/geomMath.h
               ${CMAKE_SOURCE_DIR}/src/math/Matrix.h
               ${CMAKE_SOURCE_DIR}/src/math/Quaternion.h
               ${CMAKE_SOURCE_DIR}/src/math/Vector.h
               DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/math/)
 
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
+  install(FILES ${CMAKE_SOURCE_DIR}/src/base/cameraProto.hpp
         DESTINATION ${CMAKE_SOURCE_DIR}/matlab/includes/base/)
 
 
-if(BUILD_MATLAB)
   matlab_add_mex(NAME mem_check SRC ${CMAKE_SOURCE_DIR}/matlab/mem_check.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
   matlab_add_mex(NAME mex_FDTD SRC ${CMAKE_SOURCE_DIR}/matlab/mex_FDTD.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
   matlab_add_mex(NAME device_reset SRC ${CMAKE_SOURCE_DIR}/matlab/device_reset.cpp LINK_TO ${CUDA_cudart_static_LIBRARY} ${VOXELIZER_LIB} libParallelFDTD)
