@@ -4,6 +4,7 @@ import shutil
 import subprocess
 
 from setuptools import Extension
+from setuptools.command.build_py import build_py
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install_lib import install_lib
 
@@ -20,6 +21,9 @@ class InstallCMakeLibs(install_lib):
     def run(self):
         self.distribution.data_files = []
 
+        # make sure the cmake command is run
+        self.run_command('build_ext')
+        self.run_command('build_py')
 
         library_dir = self.distribution.cmake_build_dir
         library_dir = os.path.join(library_dir, 'python')
@@ -42,13 +46,11 @@ class InstallCMakeLibs(install_lib):
                dist_name = os.path.join(dist_path, filename)
 
                print(libname, dist_path, dist_name)
-               shutil.move(libname, dist_path)
+               shutil.copy(libname, dist_path)
 
                self.distribution.data_files.append(dist_name)
 
         super().run()
-
-
 
     def get_outputs(self):
         return self.distribution.data_files
@@ -91,9 +93,10 @@ class CMakeBuild(build_ext):
           ["cmake", "--build", self.build_temp, '-t', 'libPyFDTD', '--'] +
           build_config
         )
-        subprocess.check_call(
-          ["cmake", "--install", self.build_temp]
-        )
+        #subprocess.check_call(
+        #  ["cmake", "--install", self.build_temp]
+        #)
+
 
 setuptools.setup(
     name=PACKAGE_NAME,
@@ -113,6 +116,6 @@ setuptools.setup(
     ],
     cmdclass={
       'build_ext': CMakeBuild,
-      #'install_lib': InstallCMakeLibs,
+      'install_lib': InstallCMakeLibs,
     },
 )
