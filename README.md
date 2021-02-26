@@ -5,6 +5,13 @@ A FDTD solver for room acoustics using CUDA.
 
 ## Dependencies
 
+> ### On the Aalto Triton cluster
+>
+> Load the dependencies with `module load anaconda gcc/6.5.0 cuda matlab/r2019b`.
+> You also need to create the anaconda environment, see below.
+>
+
+
 ### Must be installed on system
 - Anaconda (https://docs.anaconda.com/anaconda/install/) or Miniconda (https://docs.conda.io/en/latest/miniconda.html)
 - CUDA 5-10, tested on compute capability 3.0 - 6.1
@@ -17,6 +24,7 @@ If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - HDF5 libraries (install with `conda`, see below)
 - HDF5 for python (install with `conda`, see below)
 
+
 ### Installed through Anaconda
 These are most easily installed through Anaconda, following the instructions
 below. Alternatively they can be installed manually. In that case skip the
@@ -27,27 +35,45 @@ below. Alternatively they can be installed manually. In that case skip the
 
 
 
-The code is the most straightforward to compile with cmake. The cmake script contains  three targets: An executable which is to be used to check is the code running on the used machine and have and example of how the solver can be used from C++ code. Second target is a static library, which encapsulates the functionality. Third target is a dynamic library compiled with boost::python to allow the usage of the solver as a module in python interpreter.
+## Python bindings
+
+The python bindings can be installed through pip. First you need to install the
+dependencies mentioned above. Then create a conda environment for your
+installation with the command
+```
+1 conda create -n PFDTD -c conda-forge boost py-boost cmake
+```
+
+Now you can install the package using
+```
+2 pip install git+https://github.com/AaltoRSE/ParallelFDTD.git
+```
+
+This will use cmake to compile the library and build the python package. The
+whole process can take a while. If you wish to know more about what the
+installer is doing, add `-v` to the command.
+
+> ### Python 2
+>
+> To build for Python 2.7, create the environment with
+> ```
+> conda create -n PFDTD -c conda-forge boost py-boost cmake python=2.7
+> ```
+>
+> Python 2 is no longer developed and supporting it will not be possible
+> for long.
 
 
 Compiling
 =========
 
 The compilation has been tested on:
-- CentOS 6, CentOS 7 with GCC 6.3.0
+- CentOS 6, CentOS 7 with GCC 8.5.0
 - Windows 7, Windows 10 with vc120, vc140 compilers
 - Triton, the Aalto University cluster
 
-## 1. Download and install the dependencies  
 
-> ### On the Aalto Triton cluster
->
-> Load the dependencies with `module load anaconda gcc/6.5.0 cuda matlab/r2019b`.
-> You also need to create the anaconda environment, see below.
->
-> To compile on a gpu node, start an interactive session using
-> `sinteractive -t 1:00:00 --gres=gpu:1`.
->
+## 1. Download and install the dependencies  
 
 The Boost library versions are handled most easily using Anaconda. Install
 it first following the instructions at
@@ -64,16 +90,6 @@ Clone this repository. In the cloned folder create the Conda environment using
 
 This will install compatible versions Boost and cmake into a new conda evironment.
 
-> ### Python 2
->
-> To build for Python 2.7, create the environment with
-> ```
-> conda env create -n PFDTD -f conda_environment.yml python=2.7
-> ```
->
-> Python 2 is no longer developed and supporting it will not be possible
-> for long.
-
 Activate the new environment
 ```
 1.4 conda activate PFDTD
@@ -82,8 +98,8 @@ Activate the new environment
 ## 2. Build ParallelFDTD with CMAKE
 
 ```
-4.1 go to the folder of the repository  
-4.2 mkdir build  
+4.1 go to the folder of the repository
+4.2 mkdir build
 4.3 cd build
 ```
 
@@ -112,7 +128,7 @@ Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 > Cmake will compile and external dependency called Voxelizer. If you
 > prefer to use your own installation, see the end of this document.
 
-To build the python bindings use `-DBUILD_PYTHON=on` and to build the Matlab
+You can build the python bindings manually  `-DBUILD_PYTHON=on` and to build the Matlab
 bindings use `-DBUILD_MATLAB=on`.
 
 You can set the CUDA compute capabilities and architectures using the
