@@ -128,8 +128,7 @@ Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
 > Cmake will compile and external dependency called Voxelizer. If you
 > prefer to use your own installation, see the end of this document.
 
-You can build the python bindings manually  `-DBUILD_PYTHON=on` and to build the Matlab
-bindings use `-DBUILD_MATLAB=on`.
+To build the Matlab bindings use `-DBUILD_MATLAB=on`.
 
 You can set the CUDA compute capabilities and architectures using the
 `-CUDA_GENCODE=` flag to the cmake command. For example to build only with
@@ -145,6 +144,8 @@ To build the tests, python module (for linux only) and visualization, use the fo
 ```
 with the cmake command.
 
+You can also build the python bindings manually using `-DBUILD_PYTHON=on`.
+
 ### 3. Matlab
 
 To build the Matlab bindings use `-DBUILD_MATLAB=on`.
@@ -152,17 +153,6 @@ To build the Matlab bindings use `-DBUILD_MATLAB=on`.
 The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
 The directory also contains a test script, `testBench.m`, which you can also
 use for reference. The next section contains more detail on using the library.
-
-### 4. Python
-
-To build the Matlab bindings use `-DBUILD_PYTHON=on`.
-
-If you are compiling in the Anaconda environment, the python library has been
-copied into environment. For now, conda and pip do not know about it, but you
-can import it. From anywhere.
-
-The `ParallelFDTD/python` folder contains a test script called `testBench.py`.
-You can use it for reference and read below for some more details.
 
 
 Practicalities
