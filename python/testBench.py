@@ -114,7 +114,7 @@ app.setUpdateType(update_type)
 app.setNumSteps(int(num_steps))
 app.setSpatialFs(fs)
 app.setDouble(double_precision)
-app.forcePartitionTo(num_partition);
+app.forcePartitionTo(num_partition)
 app.addSurfaceMaterials(materials.flatten().tolist(), num_triangles, num_coef)
 
 app.addSource(src[0], src[1], src[2], src_type, input_type, input_data_idx)
