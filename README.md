@@ -340,8 +340,8 @@ app.runCapture()
 
 # Matlab
 
-To use ParallelFDTD from Matlab, follow the installation instructions in
-the Compiling section below.
+To use ParallelFDTD from Matlab, it must be compiled with the
+`-DBUILD_MATLAB=on` option.
 
 ## Basic Usage
 
