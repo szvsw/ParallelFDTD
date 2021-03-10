@@ -3,6 +3,10 @@ Parallel FDTD
 
 A FDTD solver for room acoustics using CUDA.
 
+
+Installation
+=============
+
 ## Dependencies
 
 > ### On the Aalto Triton cluster
@@ -15,10 +19,13 @@ A FDTD solver for room acoustics using CUDA.
 ### Must be installed on system
 - Anaconda (https://docs.anaconda.com/anaconda/install/) or Miniconda (https://docs.conda.io/en/latest/miniconda.html)
 - CUDA 5-10, tested on compute capability 3.0 - 6.1
+
 If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - Freeglut,  http://freeglut.sourceforge.net/ , Accessed May 2014  
 - GLEW, tested on 1.9.0, http://glew.sourceforge.net/, Accessed May 2014  
-- The Matlab bindings require Matlab r2019b.
+
+For Matlab bindings:
+- Matlab r2019b.
 
 ### For MPI execution
 - HDF5 libraries (install with `conda`, see below)
@@ -34,102 +41,8 @@ below. Alternatively they can be installed manually. In that case skip the
 - NumPy, SciPy (For the python interface)
 
 
-# Installation
 
-Compiling
-=========
-
-The compilation has been tested on:
-- CentOS 6, CentOS 7 with GCC 8.5.0
-- Windows 7, Windows 10 with vc120, vc140 compilers
-- Triton, the Aalto University cluster
-
-
-## 1. Download and install the dependencies  
-
-The Boost library versions are handled most easily using Anaconda. Install
-it first following the instructions at
-https://docs.anaconda.com/anaconda/install/ (or install miniconda,
-https://docs.conda.io/en/latest/miniconda.html)
-
-Clone this repository. In the cloned folder create the Conda environment using
-(you can replace the environment name `PFDTD` with your own preference)
-```
-1.1 git clone git@github.com:AaltoRSE/ParallelFDTD.git
-1.2 cd ParallelFDTD
-1.3 conda env create -n PFDTD -f conda_environment.yml
-```
-
-This will install compatible versions Boost and cmake into a new conda evironment.
-
-Activate the new environment
-```
-1.4 conda activate PFDTD
-```
-
-## 2. Build ParallelFDTD with CMAKE
-
-```
-4.1 go to the folder of the repository
-4.2 mkdir build
-4.3 cd build
-```
-
-
-### WINDOWS
-
-Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
-
-```
-4.4 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
-4.5 nmake  
-4.6 nmake install
-```
-
-### Ubuntu / CentOS
-
-```
-4.4 cmake -DCMAKE_BUILD_TYPE=release ../
-4.5 make
-4.6 make install
-```
-
-### Options
-> ### Voxelizer
->
-> Cmake will compile and external dependency called Voxelizer. If you
-> prefer to use your own installation, see the end of this document.
-
-To build the Matlab bindings use `-DBUILD_MATLAB=on`.
-
-You can set the CUDA compute capabilities and architectures using the
-`-CUDA_GENCODE=` flag to the cmake command. For example to build only with
-compute capability 6.1, use `-DCUDA_COMPUTE=arch=compute_61,code=sm_61`.
-The default without this flag is to compile for set of architectures from 3.7
-to 7.0, but using compute capability 6.1 for the architecture 7.0. This is
-compatible with CUDA 10.2 and Nvidia GPUs up to Tesla V100.
-
-To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
-```
--DBUILD_TESTS=on
--DBUILD_VISUALIZATION=on
-```
-with the cmake command.
-
-You can also build the python bindings manually using `-DBUILD_PYTHON=on`.
-
-### 3. Matlab
-
-To build the Matlab bindings use `-DBUILD_MATLAB=on`.
-
-The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
-The directory also contains a test script, `testBench.m`, which you can also
-use for reference. The next section contains more detail on using the library.
-
-
-
-## Python bindings
-
+## Python Package
 
 The python bindings can be installed through pip. First you need to install the
 dependencies mentioned above. Then create a conda environment for your
@@ -156,6 +69,100 @@ installer is doing, add `-v` to the command.
 >
 > Python 2 is no longer developed and supporting it will not be possible
 > for long.
+
+
+## Compiling
+
+Including Matlab bindings.
+
+The compilation has been tested on:
+- CentOS 6, CentOS 7 with GCC 8.5.0
+- Windows 7, Windows 10 with vc120, vc140 compilers
+- Triton, the Aalto University cluster
+
+
+### 1. Download and install the dependencies  
+
+The Boost library versions are handled most easily using Anaconda. Install
+it first following the instructions at
+https://docs.anaconda.com/anaconda/install/ (or install miniconda,
+https://docs.conda.io/en/latest/miniconda.html)
+
+Clone this repository. In the cloned folder create the Conda environment using
+(you can replace the environment name `PFDTD` with your own preference)
+```
+1.1 git clone git@github.com:AaltoRSE/ParallelFDTD.git
+1.2 cd ParallelFDTD
+1.3 conda env create -n PFDTD -f conda_environment.yml
+```
+
+This will install compatible versions Boost and cmake into a new conda evironment.
+
+Activate the new environment
+```
+1.4 conda activate PFDTD
+```
+
+### 2. Build ParallelFDTD with CMAKE
+
+```
+4.1 go to the folder of the repository
+4.2 mkdir build
+4.3 cd build
+```
+
+
+#### WINDOWS
+
+Open a VSxxxx (x64) Native Tools command prompt and follow the instructions:
+
+```
+4.4 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=release ../  
+4.5 nmake  
+4.6 nmake install
+```
+
+#### Ubuntu / CentOS
+
+```
+4.4 cmake -DCMAKE_BUILD_TYPE=release ../
+4.5 make
+4.6 make install
+```
+
+#### Options
+> ### Voxelizer
+>
+> Cmake will compile and external dependency called Voxelizer. If you
+> prefer to use your own installation, see the end of this document.
+
+To build the Matlab bindings use `-DBUILD_MATLAB=on`.
+
+You can set the CUDA compute capabilities and architectures using the
+`-CUDA_GENCODE=` flag to the cmake command. For example to build only with
+compute capability 6.1, use `-DCUDA_COMPUTE=arch=compute_61,code=sm_61`.
+The default without this flag is to compile for set of architectures from 3.7
+to 7.0, but using compute capability 6.1 for the architecture 7.0. This is
+compatible with CUDA 10.2 and Nvidia GPUs up to Tesla V100.
+
+To build the tests, python module (for linux only) and visualization, use the following flags. Real-time visualization is applicable only with a single GPU device. By default, the visualization is not compiled. The dependencies regarding the visualization naturally do not apply if compiled without the flag.
+```
+-DBUILD_TESTS=on
+-DBUILD_VISUALIZATION=on
+```
+with the cmake command.
+
+You can also build the python bindings manually using `-DBUILD_PYTHON=on`.
+
+
+### 3. Matlab
+
+To build the Matlab bindings use `-DBUILD_MATLAB=on`.
+
+The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
+The directory also contains a test script, `testBench.m`, which you can also
+use for reference. The next section contains more detail on using the library.
+
 
 
 Basic Usage
