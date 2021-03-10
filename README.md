@@ -196,146 +196,6 @@ The simulation tool does not rely on any specific CAD format. Any format which y
 The details of running simulations are reviewed in the scripts matlab/testBench.m for matlab, and python/testBench.py for Python.
 
 
-# Python
-
-The steps above will install the `pyParallelFDTD` package.
-In addition you need the `numpy` and `json` packages.
-The geometry data is stored in the json format.
-So first import the packages
-```
-import pyParallelFDTD as pf
-import numpy as np
-import json
-```
-
-Now you can load the geometry
-```
-file_stream = open("Data/box.json")
-geometry = json.load(file_stream)
-file_stream.close()
-```
-
-Parse the vertices from the `json` data.
-```
-vertices = np.reshape(m["vertices"], (int(np.size(m["vertices"])/3), 3))
-indices = np.reshape(m["indices"], (int(np.size(m["indices"])/3), 3))
-```
-
-Next create a `pyParallelFDTD` app object and pass the geometry to it
-```
-app = pf.App()
-app.initializeDevices()
-app.initializeGeometryPy(indices.flatten().tolist(), vertices.flatten().tolist())
-```
-
-We'll set some other parameters here
-```
-app.setUpdateType(0)     # 0: SRL forward, 1: SRL sliced, 2: SRL centred
-app.setNumSteps(2000)
-app.setSpatialFs(100000)
-app.setDouble(False)     # Use single precision
-app.forcePartitionTo(1)
-```
-
-Next we will set the reflection coefficients of the surface materials. First we
-will get surface layers from the data.
-```
-layer_list = m["layers_of_triangles"]
-layer_names = m["layer_names"]
-layers = {}
-for k in range(0, len(layer_names)):
-  layer_indices = [i for i, j in enumerate(layer_list) if j == layer_names[k]]
-  layers[layer_names[k]] = layer_indices
-```
-
-What we actually need is admittance. Let's define two functions to map
-reflection and absorption coefficients to admittance.
-```
-def reflection2Admittance(R):
-    return (1.0-R)/(1.0+R)
-
-def absorption2Admittance(alpha):
-    return reflection2Admittance(np.sqrt(1.0-alpha))
-```
-
-We will set the reflection coefficients to 0.99
-```
-R_glob = 0.99
-num_triangles = int(np.size(indices)/3)
-num_coef = 20
-materials = np.ones((num_triangles, num_coef))*reflection2Admittance(R_glob)
-```
-
-You can also set each layer separately
-```
-materials[layers['walls'], :] = reflection2Admittance(R_glob)
-materials[layers['ceiling'], :] = reflection2Admittance(R_glob)
-materials[layers['floor'], :] = reflection2Admittance(R_glob)
-```
-
-Now we can assign the materials to the model in the `pyParallelFDTD` app:
-```
-app.addSurfaceMaterials(materials.flatten().tolist(), num_triangles, num_coef)
-```
-
-We should also add a source
-```
-src_type = 0    # 0: Hard, 1: Soft, 2: Transparent
-input_type = 1  # 0: Delta, 1: Gaussian, 2: Sine, 3: Given data
-input_data_idx = 0
-src = [0.5, 0.5, 0.5]
-app.addSource(src[0], src[1], src[2], src_type, input_type, input_data_idx)
-```
-
-and some receivers
-```
-for i in range(0, np.shape(rec)[0]):
-  app.addReceiver(rec[i][0],rec[i][1],rec[i][2])
-```
-
-We can now run a simulation using
-```
-app.runSimulation()
-```
-
-To get the results use
-```
-rec = [[0.6, 0.6, 0.6],
-       [0.4, 0.4, 0.4]]
-
-ret = []
-for i in range(0, np.shape(rec)[0]):
-  ret.append(np.array(app.getResponse(i)))
-  # or ret.append(np.array(app.getResponseDouble(i))) for double precision
-```
-
-To turn this into a Numpy array and plot
-```
-ret = np.transpose(np.array(ret))
-plt.plot(ret)
-```
-
-Finally, close the app
-```
-app.close()
-del app
-```
-
-In addition to just running the simulation (`app.runSimulation()`), you can
-visualize the simulation using
-```
-app.runVisualization()
-```
-
-or run captures
-```
-slice_n = 60
-step = 100
-orientation = 1
-
-app.addSliceToCapture(slice_n, step, orientation)
-app.runCapture()
-```
 
 
 # Matlab
@@ -526,6 +386,147 @@ P_rs = resample(FDTDpostFilter(double(p), fs, 0.2), 48000, fs);
 ```
 
 
+
+# Python
+
+The steps above will install the `pyParallelFDTD` package.
+In addition you need the `numpy` and `json` packages.
+The geometry data is stored in the json format.
+So first import the packages
+```
+import pyParallelFDTD as pf
+import numpy as np
+import json
+```
+
+Now you can load the geometry
+```
+file_stream = open("Data/box.json")
+geometry = json.load(file_stream)
+file_stream.close()
+```
+
+Parse the vertices from the `json` data.
+```
+vertices = np.reshape(m["vertices"], (int(np.size(m["vertices"])/3), 3))
+indices = np.reshape(m["indices"], (int(np.size(m["indices"])/3), 3))
+```
+
+Next create a `pyParallelFDTD` app object and pass the geometry to it
+```
+app = pf.App()
+app.initializeDevices()
+app.initializeGeometryPy(indices.flatten().tolist(), vertices.flatten().tolist())
+```
+
+We'll set some other parameters here
+```
+app.setUpdateType(0)     # 0: SRL forward, 1: SRL sliced, 2: SRL centred
+app.setNumSteps(2000)
+app.setSpatialFs(100000)
+app.setDouble(False)     # Use single precision
+app.forcePartitionTo(1)
+```
+
+Next we will set the reflection coefficients of the surface materials. First we
+will get surface layers from the data.
+```
+layer_list = m["layers_of_triangles"]
+layer_names = m["layer_names"]
+layers = {}
+for k in range(0, len(layer_names)):
+  layer_indices = [i for i, j in enumerate(layer_list) if j == layer_names[k]]
+  layers[layer_names[k]] = layer_indices
+```
+
+What we actually need is admittance. Let's define two functions to map
+reflection and absorption coefficients to admittance.
+```
+def reflection2Admittance(R):
+    return (1.0-R)/(1.0+R)
+
+def absorption2Admittance(alpha):
+    return reflection2Admittance(np.sqrt(1.0-alpha))
+```
+
+We will set the reflection coefficients to 0.99
+```
+R_glob = 0.99
+num_triangles = int(np.size(indices)/3)
+num_coef = 20
+materials = np.ones((num_triangles, num_coef))*reflection2Admittance(R_glob)
+```
+
+You can also set each layer separately
+```
+materials[layers['walls'], :] = reflection2Admittance(R_glob)
+materials[layers['ceiling'], :] = reflection2Admittance(R_glob)
+materials[layers['floor'], :] = reflection2Admittance(R_glob)
+```
+
+Now we can assign the materials to the model in the `pyParallelFDTD` app:
+```
+app.addSurfaceMaterials(materials.flatten().tolist(), num_triangles, num_coef)
+```
+
+We should also add a source
+```
+src_type = 0    # 0: Hard, 1: Soft, 2: Transparent
+input_type = 1  # 0: Delta, 1: Gaussian, 2: Sine, 3: Given data
+input_data_idx = 0
+src = [0.5, 0.5, 0.5]
+app.addSource(src[0], src[1], src[2], src_type, input_type, input_data_idx)
+```
+
+and some receivers
+```
+for i in range(0, np.shape(rec)[0]):
+  app.addReceiver(rec[i][0],rec[i][1],rec[i][2])
+```
+
+We can now run a simulation using
+```
+app.runSimulation()
+```
+
+To get the results use
+```
+rec = [[0.6, 0.6, 0.6],
+       [0.4, 0.4, 0.4]]
+
+ret = []
+for i in range(0, np.shape(rec)[0]):
+  ret.append(np.array(app.getResponse(i)))
+  # or ret.append(np.array(app.getResponseDouble(i))) for double precision
+```
+
+To turn this into a Numpy array and plot
+```
+ret = np.transpose(np.array(ret))
+plt.plot(ret)
+```
+
+Finally, close the app
+```
+app.close()
+del app
+```
+
+In addition to just running the simulation (`app.runSimulation()`), you can
+visualize the simulation using
+```
+app.runVisualization()
+```
+
+or run captures
+```
+slice_n = 60
+step = 100
+orientation = 1
+
+app.addSliceToCapture(slice_n, step, orientation)
+app.runCapture()
+```
 
 
 
