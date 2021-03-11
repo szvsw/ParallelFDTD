@@ -1,8 +1,9 @@
 Parallel FDTD
 =============
 
-A FDTD solver for room acoustics using CUDA.
+An FDTD solver for room acoustics using CUDA. To reference this code:
 
+Saarelma, J. and Savioja, L., An open source finite-difference time-domain solver for room acoustics using graphics processing units. Forum Acusticum, Krakow, Poland, Sept. 2014
 
 Installation
 =============
@@ -49,11 +50,12 @@ dependencies mentioned above. Then create a conda environment for your
 installation with the command
 ```
 1 conda create -n PFDTD -c conda-forge boost py-boost cmake
+2 conda activate PFDTD
 ```
 
 Now you can install the package using
 ```
-2 pip install git+https://github.com/AaltoRSE/ParallelFDTD.git
+3 pip install git+https://github.com/AaltoRSE/ParallelFDTD.git
 ```
 
 This will use cmake to compile the library and build the python package. The
