@@ -180,7 +180,7 @@ with the cmake command.
 ## Matlab Usage
 
 The Matlab library (three mex files) have been copied to `ParallelFDTD/matlab`.
-The directory also contains a test script, `testBench.m`, which you can also
+The directory also contains a test script, (matlab/testBench.m)[matlab/testBench.m], which you can also
 use for reference. The next section contains more detail on using the library.
 
 
