@@ -77,7 +77,7 @@ Now you can import the package in your python code with
 1.5 import pyParallelFDTD
 ```
 
-For more details see the example in [python/testBench.py]. The script uses two
+For more details see the example in (python/testBench.py). The script uses two
 additional packages, `matplotlib` and `h5py`. You can install these using
 ```
 1.6 conda install -c conda-forge matplotlib h5py
