@@ -6,9 +6,15 @@ Created on Thu Aug  7 10:20:05 2014
 
 """
 
+# Before running this you need to activate the anaconda environment
+#  conda activate PFDTD
+# and install matplotlib and h5py
+#  conda install -c conda-forge matplotlib h5py
+
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+import h5py
 
 # The FDTD library is loaded as module
 import pyParallelFDTD as pf
@@ -144,6 +150,18 @@ for i in range(0, np.shape(rec)[0]):
 # Cast to Numpy array for convenient slicing
 ret = np.transpose(np.array(ret))
 plt.plot(ret)
+
+
+# Save some important results in the hdf5 format
+fp_out = 'box'+"_"+str(int(np.round(fs)))+'.hdf5'
+f = h5py.File(fp_out, 'w')
+f.create_dataset('ret', data=ret)
+f['src'] = src
+f['rec'] = rec
+f['dx'] = dx
+f['dt'] = dt
+f['fs'] = fs
+f.close()
 
 # Remember to close and delete the solver after you're done!
 app.close()
