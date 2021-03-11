@@ -91,7 +91,7 @@ indices = reshape(m.indices, [3, length(m.indices)/3])'; % Triangle indices = Nu
 
 octave = 0;                                % Lets use the first "octave"
 
-% 20 values is somwhat arbitrary
+% 20 values is somewhat arbitrary
 % number, which rationale is to accomodate 2 variables per 10 octave bands
 % to be used in the calculation in future work.
 % Now only one variable is used, which is an admittance value
@@ -204,6 +204,10 @@ P_rs = [];
 % Filter and resample the result
 P_rs = resample(FDTDpostFilter(double(p), fs, 0.2), 48000, fs);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [1] Bilbao, S. Modeling of complex geometries and boundary conditions
 %     in finite difference/finite volume time domain room acoustics simulation.
