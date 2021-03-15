@@ -213,7 +213,7 @@ Copy this file to the sketchup Plugins Folder. The plugin folder of the applicat
 The simulation tool does not rely on any specific CAD format. Any format which you have a Matlab importer available and that has the geometry described as list of vertices coordinates and triangle indices should do. As mentioned above, a requirement for the geometry is that it is solid/watertight. The format that is supported right away is JSON file that contains the vertice coordinates and triangle indices. Layer information is also really convenient for assigning materials for the model. JSON parser for Matlab (JSONlab by Qianqian Fang goo.gl/v2jnHx) is included in this repository.
 
 ### Run the simulation
-The details of running simulations are reviewed in the scripts matlab/testBench.m for matlab, and python/testBench.py for Python.
+The details of running simulations are reviewed in the scripts [matlab/testBench.m](matlab/testBench.m) for Matlab, and [python/testBench.py](python/testBench.py) for Python.
 
 
 
