@@ -40,6 +40,7 @@ import pyParallelFDTD as pf
 # modes of the space. An interested reader can see [1].
 
 update_type = 0 # 0: SRL forward, 1: SRL sliced, 2: SRL centred
+voxelization_type = 1 # 0: Solid, 1: Surface
 num_steps = 2000
 fs = 100000
 
@@ -160,6 +161,7 @@ app.initializeGeometryPy(indices.flatten().tolist(), vertices.flatten().tolist()
 app.setUpdateType(update_type)
 app.setNumSteps(int(num_steps))
 app.setSpatialFs(fs)
+app.setVoxelizationType(voxelization_type)
 app.setDouble(double_precision)
 app.forcePartitionTo(num_partition)
 app.addSurfaceMaterials(materials.flatten().tolist(), num_triangles, num_coef)
@@ -204,7 +206,6 @@ f = h5py.File(fp_out, 'w')
 f.create_dataset('ret', data=ret)
 f['src'] = src
 f['rec'] = rec
-f['dx'] = dx
 f['dt'] = dt
 f['fs'] = fs
 f.close()
