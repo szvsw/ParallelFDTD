@@ -20,6 +20,10 @@ Installation
 ### Must be installed on system
 - Anaconda (https://docs.anaconda.com/anaconda/install/) or Miniconda (https://docs.conda.io/en/latest/miniconda.html)
 - CUDA 5-10, tested on compute capability 3.0 - 6.1
+- OpenGL
+ - In Windows this is a part of the Windows SDK
+ - In Linux this is either in Xorg or Mesa. In Ubuntu, install the
+   `mesa-common-dev` package (`sudo apt install mesa-common-dev`).
 
 If visualization is compiled (set 'BUILD_VISUALIZATION' cmake flag - see below):
 - Freeglut,  http://freeglut.sourceforge.net/ , Accessed May 2014  
