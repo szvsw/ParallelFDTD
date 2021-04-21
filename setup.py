@@ -74,7 +74,6 @@ class CMakeBuild(build_ext):
 
     def build_extension(self, ext):
         cmake_config = ["-DBUILD_PYTHON=on"]
-        build_config = ["-j", "4"]
 
         self.distribution.cmake_build_dir = self.build_temp
 
