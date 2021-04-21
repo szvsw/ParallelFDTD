@@ -12,13 +12,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_SYSTEM_NO_LIB -std=gnu++11 -fPIC
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DBOOST_SYSTEM_NO_LIB -Xcompiler -std=gnu++11 -Xcompiler -fPIC")
 
 
+
 # Add Voxelizer, either building from github or if VOXELIZER_ROOT
 # is given, use installation in that location
 if(NOT VOXELIZER_ROOT)
-
   include(ExternalProject)
   ExternalProject_Add(Voxelizer
-    GIT_REPOSITORY https://github.com/AaltoRSE/Voxelizer.git
+    GIT_REPOSITORY "https://github.com/AaltoRSE/Voxelizer.git"
     CMAKE_ARGS "-DCUDA_GENCODE=${CUDA_GENCODE}"
   )
   set( BUILD_VOXELIZER on )
@@ -82,7 +82,8 @@ else()
 
   # with boost > 1.66, we need to specify the python version.
   if(WIN32) # On windows include the chrono library
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono numpy REQUIRED)
+	cmake_policy(SET CMP0074 NEW)
+    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} chrono numpy${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
   else()
     find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} numpy REQUIRED)
   endif()
