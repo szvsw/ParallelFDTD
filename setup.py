@@ -89,8 +89,7 @@ class CMakeBuild(build_ext):
 
         # Build and install
         subprocess.check_call(
-          ["cmake", "--build", self.build_temp, '-t', 'libPyFDTD', '--'] +
-          build_config
+          ["cmake", "--build", self.build_temp, '-t', 'libPyFDTD', '--']
         )
         #subprocess.check_call(
         #  ["cmake", "--install", self.build_temp]
