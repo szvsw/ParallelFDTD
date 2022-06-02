@@ -151,17 +151,21 @@ endif()
 
 
 # Set CUDA architecture
-if(CUDA_GENCODE)
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -gencode ${CUDA_GENCODE}")
-else()
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} \
-    -gencode arch=compute_70,code=sm_60 \
-    -gencode arch=compute_61,code=sm_61 \
-    -gencode arch=compute_60,code=sm_60 \
-    -gencode arch=compute_52,code=sm_52 \
-    -gencode arch=compute_37,code=sm_37"
-  )
-endif()
+cmake_policy(SET CMP0104 OLD)
+set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
+                                 -gencode arch=compute_80,code=sm_60
+                                 -gencode arch=compute_70,code=sm_60
+                                 -gencode arch=compute_61,code=sm_61
+                                 -gencode arch=compute_60,code=sm_60
+                                 -gencode arch=compute_52,code=sm_52
+                         )
+set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
+                                 -gencode arch=compute_80,code=sm_60
+                                 -gencode arch=compute_70,code=sm_60
+                                 -gencode arch=compute_61,code=sm_61
+                                 -gencode arch=compute_60,code=sm_60
+                                 -gencode arch=compute_52,code=sm_52
+                         )
 
 
 
