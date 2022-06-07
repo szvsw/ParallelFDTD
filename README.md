@@ -12,7 +12,8 @@ Installation
 
 > ### On the Aalto Triton cluster
 >
-> Load the dependencies with `module load anaconda gcc/6.5.0 cuda matlab/r2019b`.
+> Load the dependencies with
+> `module load anaconda/2021-04-tf2 cuda/11.0.2 matlab gcc/8.4.0`.
 > You also need to create the anaconda environment, see below.
 >
 
