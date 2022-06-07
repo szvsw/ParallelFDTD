@@ -149,9 +149,12 @@ endif()
 #endif()
 
 
-
 # Set CUDA architecture
 cmake_policy(SET CMP0104 OLD)
+if(CUDA_GENCODE)
+	set(CUDA_NVCC_FLAGS_RELEASE "${CMAKE_CUDA_FLAGS} -gencode ${CUDA_GENCODE}")
+	set(CUDA_NVCC_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS} -gencode ${CUDA_GENCODE}")
+else()
 set( CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};
                                  -gencode arch=compute_80,code=sm_60
                                  -gencode arch=compute_70,code=sm_60
@@ -166,6 +169,7 @@ set( CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};
                                  -gencode arch=compute_60,code=sm_60
                                  -gencode arch=compute_52,code=sm_52
                          )
+endif()
 
 
 
