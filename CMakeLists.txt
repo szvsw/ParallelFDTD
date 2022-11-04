@@ -74,9 +74,9 @@ if(Boost_VERSION_MINOR LESS 67 )
 
   if(WIN32) # On windows include the chrono library
     message( STATUS "WIN 66")
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python chrono numpy REQUIRED)
+    find_package( Boost COMPONENTS system thread date_time unit_test_framework python chrono numpy REQUIRED)
   else()
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python numpy REQUIRED)
+    find_package( Boost COMPONENTS system thread date_time unit_test_framework python numpy REQUIRED)
   endif()
 
 else()
@@ -84,9 +84,9 @@ else()
   # with boost > 1.66, we need to specify the python version.
   if(WIN32) # On windows include the chrono library
 	cmake_policy(SET CMP0074 NEW)
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} chrono numpy${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
+    find_package( Boost COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} chrono numpy${Python_VERSION_MAJOR}${Python_VERSION_MINOR} REQUIRED)
   else()
-    find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} numpy REQUIRED)
+    find_package( Boost COMPONENTS system thread date_time unit_test_framework python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} numpy REQUIRED)
   endif()
 endif()
 
@@ -95,9 +95,9 @@ else()
 # No python bindings
 
 if(WIN32) # On windows include the chrono library
-  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework chrono REQUIRED)
+  find_package( Boost COMPONENTS system thread date_time unit_test_framework chrono REQUIRED)
 else()
-  find_package( Boost 1.41 COMPONENTS system thread date_time unit_test_framework REQUIRED)
+  find_package( Boost COMPONENTS system thread date_time unit_test_framework REQUIRED)
 endif()
 
 endif()
