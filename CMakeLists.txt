@@ -53,7 +53,7 @@ set( Boost_USE_STATIC_RUNTIME OFF )
 # Check if we are in a conda environment and find boost there
 if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
   message( STATUS "CONDA_PREFIX $ENV{CONDA_PREFIX}")
-  set( BOOST_ROOT "C:\Program Files\boost_1_80_0")
+  set( BOOST_ROOT C:/Program Files/boost_1_80_0)
   set( Python_FIND_VIRTUALENV ONLY)
 endif()
 
