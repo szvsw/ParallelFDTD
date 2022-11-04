@@ -56,6 +56,7 @@ if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
   set( BOOST_ROOT C:/Program Files/boost_1_80_0)
   set( Python_FIND_VIRTUALENV ONLY)
 endif()
+set( BOOST_ROOT C:/Program Files/boost_1_80_0)
 
 
 # Find python and python libraries
