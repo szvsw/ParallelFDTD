@@ -58,6 +58,9 @@ if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
 endif()
 set( BOOST_ROOT C:/Program Files/boost_1_80_0)
 set( Boost_INCLUDE_DIR C:/Program Files/boost_1_80_0/libs/headers)
+set( Boost_INCLUDEDIR C:/Program Files/boost_1_80_0/libs/headers)
+set( Boost_LIBRARY_DIR C:/Program Files/boost_1_80_0)
+set( Boost_LIBRARYDIR C:/Program Files/boost_1_80_0)
 
 
 # Find python and python libraries
