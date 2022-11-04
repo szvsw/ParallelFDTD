@@ -57,7 +57,7 @@ if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
   set( Python_FIND_VIRTUALENV ONLY)
 endif()
 set( BOOST_ROOT C:/Program Files/boost_1_80_0)
-set( Boost_INCLUDE_DIR C:/Program Files/boost_1_80_0 C:/Program Files/boost_1_80_0/libs/headers)
+set( Boost_INCLUDE_DIR C:/Program Files/boost_1_80_0/libs/headers)
 
 
 # Find python and python libraries
