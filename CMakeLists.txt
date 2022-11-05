@@ -58,7 +58,7 @@ if(NOT "$ENV{CONDA_PREFIX}" STREQUAL "")
 endif()
 set( BOOST_ROOT C:/ProgramData/Anaconda3/envs/opti-acoustics)
 set( Boost_INCLUDE_DIR C:/ProgramData/Anaconda3/envs/opti-acoustics)
-set( Boost_LIBRARY_DIR C:/ProgramData/Anaconda3/envs/opti-acoustics\library)
+set( Boost_LIBRARY_DIR C:/ProgramData/Anaconda3/envs/opti-acoustics/library)
 
 # Find python and python libraries
 find_package( Python REQUIRED)
