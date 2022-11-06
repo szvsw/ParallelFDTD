@@ -68,8 +68,8 @@ find_package( PythonLibs REQUIRED)
 # Check the boost version to figure out the format of the python library
 #FIND_PACKAGE(Boost)
 message( STATUS "CONDA_PREFIX $ENV{CONDA_PREFIX}")
-if(BUILD_PYTHON)
-
+#if(BUILD_PYTHON)
+if(FALSE)
 if(Boost_VERSION_MINOR LESS 67 )
 
   if(WIN32) # On windows include the chrono library
